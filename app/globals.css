@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 220 45% 98%;
+  --foreground: 222 42% 8%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 42% 8%;
+  --primary: 217 92% 58%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 168 62% 45%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 216 20% 92%;
+  --muted-foreground: 220 12% 42%;
+  --accent: 267 84% 66%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 216 24% 84%;
+  --input: 216 24% 84%;
+  --ring: 217 92% 58%;
+}
+
+.dark {
+  --background: 222 48% 6%;
+  --foreground: 42 38% 93%;
+  --card: 222 42% 10%;
+  --card-foreground: 42 38% 93%;
+  --primary: 214 100% 61%;
+  --primary-foreground: 222 42% 8%;
+  --secondary: 166 67% 42%;
+  --secondary-foreground: 222 42% 8%;
+  --muted: 220 28% 15%;
+  --muted-foreground: 220 11% 68%;
+  --accent: 266 89% 69%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 74% 54%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 222 25% 20%;
+  --input: 222 25% 20%;
+  --ring: 214 100% 61%;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+html {
+  min-height: 100%;
+  background: hsl(var(--background));
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(46, 144, 250, 0.14), transparent 32rem),
+    radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.08), transparent 28rem),
+    hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.glass {
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: rgba(10, 18, 34, 0.64);
+  backdrop-filter: blur(18px);
+}
+
+.light .glass {
+  border-color: rgba(14, 23, 42, 0.1);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
