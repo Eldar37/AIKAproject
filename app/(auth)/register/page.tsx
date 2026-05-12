@@ -9,6 +9,7 @@ import { GlassPanel } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { AikaLogo } from "@/components/ui/logo";
 import { LanguageSwitcher, useI18n } from "@/components/i18n-provider";
+import { resolveAuthError } from "@/lib/utils/api-errors";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function RegisterPage() {
 
     setLoading(false);
     if (!response.ok) {
-      setError(response.status === 409 ? t("auth.register.duplicate") : t("auth.register.error"));
+      setError(await resolveAuthError(response, language, t("auth.register.error"), t("auth.register.duplicate")));
       return;
     }
 

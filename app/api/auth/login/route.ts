@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db/prisma";
 import { verifyPassword } from "@/lib/auth/password";
 import { AUTH_COOKIE, signAuthToken } from "@/lib/auth/jwt";
 import { authCookieOptions } from "@/lib/auth/cookies";
+import { assertAuthConfig, assertDatabaseConfig } from "@/lib/config/runtime";
 import { handleRouteError } from "@/lib/utils/http";
 import { loginSchema } from "@/lib/utils/validators";
 
@@ -11,6 +12,9 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
+    assertDatabaseConfig();
+    assertAuthConfig();
+
     const payload = loginSchema.parse(await request.json());
     const user = await prisma.user.findUnique({
       where: { email: payload.email },

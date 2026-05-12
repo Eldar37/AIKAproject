@@ -23,6 +23,8 @@ jest.mock("@/lib/auth/jwt", () => ({
 describe("POST /api/auth/register", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    process.env.DATABASE_URL = "postgresql://postgres:password@localhost:5432/aika_test";
+    process.env.JWT_SECRET = "test-secret-at-least-16-characters";
   });
 
   it("creates a user and sets a session cookie", async () => {
@@ -69,5 +71,26 @@ describe("POST /api/auth/register", () => {
     const response = await POST(request);
 
     expect(response.status).toBe(409);
+  });
+
+  it("returns a clear deployment error when DATABASE_URL is missing", async () => {
+    delete process.env.DATABASE_URL;
+
+    const request = new NextRequest("http://localhost:3000/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: "test@aika.local",
+        password: "password123",
+        name: "Test User"
+      })
+    });
+
+    const response = await POST(request);
+    const body = await response.json();
+
+    expect(response.status).toBe(503);
+    expect(body.code).toBe("DATABASE_URL_MISSING");
+    expect(prisma.user.findUnique).not.toHaveBeenCalled();
   });
 });

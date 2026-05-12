@@ -9,11 +9,12 @@ import { GlassPanel } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { AikaLogo } from "@/components/ui/logo";
 import { LanguageSwitcher, useI18n } from "@/components/i18n-provider";
+import { resolveAuthError } from "@/lib/utils/api-errors";
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { t } = useI18n();
+  const { language, t } = useI18n();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +34,7 @@ function LoginForm() {
 
     setLoading(false);
     if (!response.ok) {
-      setError(t("auth.login.error"));
+      setError(await resolveAuthError(response, language, t("auth.login.error")));
       return;
     }
 
