@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
         email: payload.email,
         name: payload.name,
         passwordHash,
-        profile: { create: {} },
+        profile: { create: { language: payload.language ?? "ru" } },
         progress: { create: { milestones: [] } },
         streaks: { create: {} }
       },

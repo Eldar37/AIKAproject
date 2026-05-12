@@ -20,167 +20,147 @@ export const AI_MODES: Record<AIMode, ModeDefinition> = {
   START_MODE: {
     label: "START",
     stage: "START",
-    quickPrompts: [
-      "Помоги проверить мою идею за 1 день",
-      "Сформулируй оффер для Instagram",
-      "Какие первые 10 клиентов мне написать?"
-    ],
+    quickPrompts: ["chat.quick.start1", "chat.quick.start2", "chat.quick.start3"],
     tasks: [
       {
-        title: "Сформулируй один понятный оффер",
-        description: "Опиши продукт, цену, результат и кому он нужен в 3 предложениях.",
+        title: "task.template.start.offer.title",
+        description: "task.template.start.offer.description",
         type: "daily",
         priority: "high",
         xpReward: 20
       },
       {
-        title: "Найди 15 людей из целевой аудитории",
-        description: "Используй Instagram, знакомых, Telegram-чаты или WhatsApp-контакты.",
+        title: "task.template.start.contacts.title",
+        description: "task.template.start.contacts.description",
         type: "daily",
         priority: "high",
         xpReward: 20
       },
       {
-        title: "Задай 3 вопроса рынку",
-        description: "Узнай боль, текущую альтернативу и готовность заплатить.",
+        title: "task.template.start.questions.title",
+        description: "task.template.start.questions.description",
         type: "daily",
         priority: "medium",
         xpReward: 15
       }
     ],
-    recommendation: "Проверь спрос через разговоры, не через долгую подготовку."
+    recommendation: "recommendation.mode.START_MODE"
   },
   GROWTH_MODE: {
     label: "GROWTH",
     stage: "GROWTH",
-    quickPrompts: [
-      "Как увеличить повторные продажи?",
-      "Составь контент-план на неделю",
-      "Как собрать отзывы и доверие?"
-    ],
+    quickPrompts: ["chat.quick.growth1", "chat.quick.growth2", "chat.quick.growth3"],
     tasks: [
       {
-        title: "Собери 3 отзыва или истории клиентов",
-        description: "Попроси клиентов описать результат и разрешение использовать отзыв.",
+        title: "task.template.growth.reviews.title",
+        description: "task.template.growth.reviews.description",
         type: "daily",
         priority: "high",
         xpReward: 25
       },
       {
-        title: "Опубликуй продающую сторис-серию",
-        description: "Проблема, процесс, результат, призыв написать в WhatsApp или Direct.",
+        title: "task.template.growth.story.title",
+        description: "task.template.growth.story.description",
         type: "daily",
         priority: "medium",
         xpReward: 20
       },
       {
-        title: "Проверь один канал продаж",
-        description: "Сравни Instagram, Telegram и WhatsApp по заявкам за последние 7 дней.",
+        title: "task.template.growth.channel.title",
+        description: "task.template.growth.channel.description",
         type: "daily",
         priority: "medium",
         xpReward: 15
       }
     ],
-    recommendation: "Сделай продажи повторяемыми: оффер, контент, заявки, follow-up."
+    recommendation: "recommendation.mode.GROWTH_MODE"
   },
   SCALE_MODE: {
     label: "SCALE",
     stage: "SCALE",
-    quickPrompts: [
-      "Какие метрики роста отслеживать?",
-      "Как делегировать продажи?",
-      "Где искать партнерства в регионе?"
-    ],
+    quickPrompts: ["chat.quick.scale1", "chat.quick.scale2", "chat.quick.scale3"],
     tasks: [
       {
-        title: "Посчитай прибыль по ключевому продукту",
-        description: "Выручка, переменные затраты, время команды и маржа.",
+        title: "task.template.scale.margin.title",
+        description: "task.template.scale.margin.description",
         type: "daily",
         priority: "high",
         xpReward: 30
       },
       {
-        title: "Опиши один процесс для делегирования",
-        description: "Выбери продажи, контент или поддержку и запиши чеклист выполнения.",
+        title: "task.template.scale.process.title",
+        description: "task.template.scale.process.description",
         type: "milestone",
         priority: "high",
         xpReward: 30
       },
       {
-        title: "Найди 2 партнерских канала",
-        description: "Подумай о блогерах, локальных бизнесах, Telegram-каналах или маркетплейсах.",
+        title: "task.template.scale.partners.title",
+        description: "task.template.scale.partners.description",
         type: "daily",
         priority: "medium",
         xpReward: 20
       }
     ],
-    recommendation: "Рост должен усиливать маржу и систему, а не только нагрузку."
+    recommendation: "recommendation.mode.SCALE_MODE"
   },
   CONTENT_MODE: {
     label: "CONTENT",
     stage: "GROWTH",
-    quickPrompts: [
-      "Сделай пост для Instagram",
-      "Напиши 5 хуков для Reels",
-      "Создай Telegram-пост с продажей"
-    ],
+    quickPrompts: ["chat.quick.content1", "chat.quick.content2", "chat.quick.content3"],
     tasks: [
       {
-        title: "Создай 3 контент-хука",
-        description: "Один про боль, один про результат, один про возражение клиента.",
+        title: "task.template.content.hooks.title",
+        description: "task.template.content.hooks.description",
         type: "daily",
         priority: "high",
         xpReward: 20
       },
       {
-        title: "Опубликуй один короткий формат",
-        description: "Reels, TikTok, сторис или Telegram-пост с явным CTA.",
+        title: "task.template.content.short.title",
+        description: "task.template.content.short.description",
         type: "daily",
         priority: "medium",
         xpReward: 20
       },
       {
-        title: "Ответь на входящие реакции",
-        description: "Напиши всем, кто поставил реакцию, сохрани вопросы для новых постов.",
+        title: "task.template.content.replies.title",
+        description: "task.template.content.replies.description",
         type: "daily",
         priority: "medium",
         xpReward: 15
       }
     ],
-    recommendation: "Контент должен вести к диалогу, а диалог к продаже."
+    recommendation: "recommendation.mode.CONTENT_MODE"
   },
   FIRST_MONEY_MODE: {
     label: "FIRST MONEY",
     stage: "START",
-    quickPrompts: [
-      "Составь план первого дохода на 7 дней",
-      "Напиши скрипт для первых сообщений",
-      "Как быстро проверить цену?"
-    ],
+    quickPrompts: ["chat.quick.money1", "chat.quick.money2", "chat.quick.money3"],
     tasks: [
       {
-        title: "Выбери оффер на 7 дней",
-        description: "Один продукт, один сегмент, одна цена и один понятный результат.",
+        title: "task.template.money.offer.title",
+        description: "task.template.money.offer.description",
         type: "daily",
         priority: "high",
         xpReward: 25
       },
       {
-        title: "Напиши 20 теплым контактам",
-        description: "Без спама: персонально, коротко, с вопросом о потребности.",
+        title: "task.template.money.contacts.title",
+        description: "task.template.money.contacts.description",
         type: "challenge",
         priority: "high",
         xpReward: 35
       },
       {
-        title: "Закрой один следующий шаг",
-        description: "Звонок, предоплата, бронь, пробный заказ или встреча сегодня.",
+        title: "task.template.money.close.title",
+        description: "task.template.money.close.description",
         type: "daily",
         priority: "high",
         xpReward: 30
       }
     ],
-    recommendation: "Сейчас важнее первый платеж, чем идеальная упаковка."
+    recommendation: "recommendation.mode.FIRST_MONEY_MODE"
   }
 };
 

@@ -7,15 +7,17 @@ import { Button } from "@/components/ui/button";
 import { GlassPanel } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { AikaLogo } from "@/components/ui/logo";
+import { LanguageSwitcher, useI18n } from "@/components/i18n-provider";
 import { cn } from "@/lib/utils/cn";
 
 const niches = ["beauty", "education", "food", "fashion", "services", "digital", "tourism", "marketplace", "craft", "fitness"];
-const steps = [
-  { title: "Бизнес", icon: Building2 },
-  { title: "Ниша", icon: Target },
-  { title: "Каналы", icon: Globe2 },
-  { title: "Бюджет", icon: CircleDollarSign },
-  { title: "Опыт", icon: UserRound }
+const stepKeys = [
+  { title: "onboarding.step.business", icon: Building2 },
+  { title: "onboarding.step.niche", icon: Target },
+  { title: "onboarding.step.channels", icon: Globe2 },
+  { title: "onboarding.step.budget", icon: CircleDollarSign },
+  { title: "onboarding.step.experience", icon: UserRound }
 ];
 
 type OnboardingState = {
@@ -34,6 +36,7 @@ type OnboardingState = {
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -72,7 +75,7 @@ export default function OnboardingPage() {
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (step < steps.length - 1) {
+    if (step < stepKeys.length - 1) {
       setStep((current) => current + 1);
       return;
     }
@@ -87,7 +90,7 @@ export default function OnboardingPage() {
 
     setLoading(false);
     if (!response.ok) {
-      setError("Не удалось сохранить онбординг. Проверь поля и попробуй снова.");
+      setError(t("onboarding.saveError"));
       return;
     }
     router.push("/dashboard");
@@ -96,13 +99,17 @@ export default function OnboardingPage() {
   return (
     <main className="min-h-screen px-5 py-8">
       <div className="mx-auto max-w-4xl">
-        <div className="mb-8">
-          <p className="text-sm font-semibold text-primary">AIKA onboarding</p>
-          <h1 className="mt-2 text-3xl font-bold sm:text-4xl">Настроим твой бизнес-режим</h1>
+        <div className="mb-8 flex items-start justify-between gap-4">
+          <div>
+            <AikaLogo className="mb-5" />
+            <p className="text-sm font-semibold text-primary">{t("onboarding.kicker")}</p>
+            <h1 className="mt-2 text-3xl font-bold sm:text-4xl">{t("onboarding.title")}</h1>
+          </div>
+          <LanguageSwitcher />
         </div>
 
         <div className="mb-6 grid grid-cols-5 gap-2">
-          {steps.map((item, index) => {
+          {stepKeys.map((item, index) => {
             const Icon = item.icon;
             return (
               <button
@@ -115,7 +122,7 @@ export default function OnboardingPage() {
                 )}
               >
                 <Icon className="h-4 w-4" />
-                <span className="mt-1 hidden sm:block">{item.title}</span>
+                <span className="mt-1 hidden sm:block">{t(item.title)}</span>
               </button>
             );
           })}
@@ -125,11 +132,11 @@ export default function OnboardingPage() {
           <GlassPanel className="min-h-[420px]">
             {step === 0 ? (
               <section className="space-y-5">
-                <h2 className="text-2xl font-bold">У тебя уже есть бизнес?</h2>
+                <h2 className="text-2xl font-bold">{t("onboarding.hasBusiness")}</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {[
-                    { value: false, title: "Есть идея", text: "Начинаем с проверки спроса." },
-                    { value: true, title: "Есть бизнес", text: "Усиливаем продажи и систему." }
+                    { value: false, title: "onboarding.idea", text: "onboarding.ideaText" },
+                    { value: true, title: "onboarding.existingBusiness", text: "onboarding.existingBusinessText" }
                   ].map((option) => (
                     <button
                       key={option.title}
@@ -137,18 +144,18 @@ export default function OnboardingPage() {
                       onClick={() => update("hasBusiness", option.value)}
                       className={cn("rounded-lg border border-border p-4 text-left", state.hasBusiness === option.value && "border-primary bg-primary/10")}
                     >
-                      <p className="font-semibold">{option.title}</p>
-                      <p className="mt-1 text-sm text-muted-foreground">{option.text}</p>
+                      <p className="font-semibold">{t(option.title)}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">{t(option.text)}</p>
                     </button>
                   ))}
                 </div>
-                <Input value={state.businessName} onChange={(event) => update("businessName", event.target.value)} placeholder="Название бизнеса или идеи" />
+                <Input value={state.businessName} onChange={(event) => update("businessName", event.target.value)} placeholder={t("onboarding.businessName")} />
               </section>
             ) : null}
 
             {step === 1 ? (
               <section className="space-y-5">
-                <h2 className="text-2xl font-bold">Ниша и аудитория</h2>
+                <h2 className="text-2xl font-bold">{t("onboarding.nicheAudience")}</h2>
                 <select
                   value={state.niche}
                   onChange={(event) => update("niche", event.target.value)}
@@ -156,22 +163,22 @@ export default function OnboardingPage() {
                 >
                   {niches.map((niche) => (
                     <option key={niche} value={niche}>
-                      {niche}
+                      {t(`niche.${niche}`)}
                     </option>
                   ))}
                 </select>
-                <Input value={state.targetAudience} onChange={(event) => update("targetAudience", event.target.value)} placeholder="Целевая аудитория" />
-                <Textarea value={state.description} onChange={(event) => update("description", event.target.value)} placeholder="Коротко опиши продукт, услугу или идею" />
+                <Input value={state.targetAudience} onChange={(event) => update("targetAudience", event.target.value)} placeholder={t("onboarding.targetAudience")} />
+                <Textarea value={state.description} onChange={(event) => update("description", event.target.value)} placeholder={t("onboarding.description")} />
               </section>
             ) : null}
 
             {step === 2 ? (
               <section className="space-y-5">
-                <h2 className="text-2xl font-bold">Формат и каналы</h2>
+                <h2 className="text-2xl font-bold">{t("onboarding.formatChannels")}</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {[
-                    { value: true, title: "Онлайн" },
-                    { value: false, title: "Офлайн" }
+                    { value: true, title: "common.online" },
+                    { value: false, title: "common.offline" }
                   ].map((option) => (
                     <button
                       key={option.title}
@@ -179,7 +186,7 @@ export default function OnboardingPage() {
                       onClick={() => update("isOnline", option.value)}
                       className={cn("rounded-md border border-border p-4 text-left", state.isOnline === option.value && "border-primary bg-primary/10")}
                     >
-                      {option.title}
+                      {t(option.title)}
                     </button>
                   ))}
                 </div>
@@ -201,30 +208,30 @@ export default function OnboardingPage() {
 
             {step === 3 ? (
               <section className="space-y-5">
-                <h2 className="text-2xl font-bold">Бюджет и цель</h2>
+                <h2 className="text-2xl font-bold">{t("onboarding.budgetGoal")}</h2>
                 <select value={state.budget} onChange={(event) => update("budget", event.target.value as OnboardingState["budget"])} className="h-11 w-full rounded-md border border-input bg-background/70 px-3 text-sm">
-                  <option value="low">Низкий</option>
-                  <option value="medium">Средний</option>
-                  <option value="high">Высокий</option>
+                  <option value="low">{t("common.low")}</option>
+                  <option value="medium">{t("common.medium")}</option>
+                  <option value="high">{t("common.high")}</option>
                 </select>
                 <select value={state.mainGoal} onChange={(event) => update("mainGoal", event.target.value as OnboardingState["mainGoal"])} className="h-11 w-full rounded-md border border-input bg-background/70 px-3 text-sm">
-                  <option value="first_sale">Первая продажа</option>
-                  <option value="grow_audience">Рост аудитории</option>
-                  <option value="increase_revenue">Увеличить выручку</option>
-                  <option value="build_brand">Построить бренд</option>
+                  <option value="first_sale">{t("onboarding.goal.firstSale")}</option>
+                  <option value="grow_audience">{t("onboarding.goal.growAudience")}</option>
+                  <option value="increase_revenue">{t("onboarding.goal.increaseRevenue")}</option>
+                  <option value="build_brand">{t("onboarding.goal.buildBrand")}</option>
                 </select>
-                <Input type="number" min={0} value={state.monthlyRevenue ?? ""} onChange={(event) => update("monthlyRevenue", event.target.value ? Number(event.target.value) : null)} placeholder="Выручка в месяц, если есть" />
+                <Input type="number" min={0} value={state.monthlyRevenue ?? ""} onChange={(event) => update("monthlyRevenue", event.target.value ? Number(event.target.value) : null)} placeholder={t("onboarding.monthlyRevenue")} />
               </section>
             ) : null}
 
             {step === 4 ? (
               <section className="space-y-5">
-                <h2 className="text-2xl font-bold">Твой опыт</h2>
+                <h2 className="text-2xl font-bold">{t("onboarding.yourExperience")}</h2>
                 <div className="grid gap-3 sm:grid-cols-3">
                   {[
-                    { value: "beginner", title: "Новичок" },
-                    { value: "intermediate", title: "Уже пробовал" },
-                    { value: "advanced", title: "Есть опыт" }
+                    { value: "beginner", title: "onboarding.exp.beginner" },
+                    { value: "intermediate", title: "onboarding.exp.intermediate" },
+                    { value: "advanced", title: "onboarding.exp.advanced" }
                   ].map((option) => (
                     <button
                       key={option.value}
@@ -232,11 +239,11 @@ export default function OnboardingPage() {
                       onClick={() => update("experienceLevel", option.value as OnboardingState["experienceLevel"])}
                       className={cn("rounded-md border border-border p-4 text-left", state.experienceLevel === option.value && "border-primary bg-primary/10")}
                     >
-                      {option.title}
+                      {t(option.title)}
                     </button>
                   ))}
                 </div>
-                <p className="text-sm text-muted-foreground">AIKA выберет режим, первые задачи и персональный фокус на ближайшие дни.</p>
+                <p className="text-sm text-muted-foreground">{t("onboarding.finalNote")}</p>
               </section>
             ) : null}
           </GlassPanel>
@@ -245,10 +252,10 @@ export default function OnboardingPage() {
 
           <div className="mt-6 flex justify-between">
             <Button type="button" variant="outline" disabled={step === 0} onClick={() => setStep((current) => Math.max(0, current - 1))}>
-              Назад
+              {t("common.back")}
             </Button>
             <Button disabled={!canContinue || loading} type="submit">
-              {step === steps.length - 1 ? (loading ? "Генерация..." : "Создать план") : "Дальше"}
+              {step === stepKeys.length - 1 ? (loading ? t("common.generating") : t("common.createPlan")) : t("common.next")}
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>

@@ -168,19 +168,19 @@ export async function completeTaskForUser(userId: string, taskId: string, status
 
     const taskAchievement = achievementForTaskCount(tasksCompleted);
     if (taskAchievement) {
-      await upsertAchievement(tx, userId, taskAchievement.type, taskAchievement.title, "Ты превратил намерение в действие.", taskAchievement.icon);
+      await upsertAchievement(tx, userId, taskAchievement.type, taskAchievement.title, taskAchievement.type);
     }
 
     if (firstSaleDone) {
-      await upsertAchievement(tx, userId, "first_sale", "Первая продажа", "Первый доход зафиксирован. Теперь строим систему.", "💰");
+      await upsertAchievement(tx, userId, "first_sale", "first_sale", "first_sale");
     }
 
     if (nextStreak.current >= 7) {
-      await upsertAchievement(tx, userId, "streak_7", "Неделя фокуса", "7 дней активности подряд.", "🔥");
+      await upsertAchievement(tx, userId, "streak_7", "streak_7", "streak_7");
     }
 
     if (nextStreak.current >= 30) {
-      await upsertAchievement(tx, userId, "streak_30", "30-дневный ритм", "Ты держишь темп целый месяц.", "🏆");
+      await upsertAchievement(tx, userId, "streak_30", "streak_30", "streak_30");
     }
 
     return {
@@ -190,7 +190,7 @@ export async function completeTaskForUser(userId: string, taskId: string, status
       streak: nextStreak,
       stage,
       suggestion: business && firstMoneySuggestion(business.aiMode, tasksCompleted)
-        ? "Ты уже сделал 5 стартовых действий. Пора включить режим FIRST_MONEY_MODE и сфокусироваться на первом доходе."
+        ? "recommendation.mode.FIRST_MONEY_MODE"
         : null
     };
   });
@@ -238,16 +238,16 @@ export function buildInsight(aiMode: string, tasksCompleted: number, contentCoun
   if (lastActive) {
     const inactiveDays = Math.floor((Date.now() - lastActive.getTime()) / 86_400_000);
     if (inactiveDays >= 3) {
-      return "Ты не заходил 3 дня. Твои конкуренты не стоят на месте. Вернись к одному маленькому действию сегодня.";
+      return "dashboard.defaultInsight";
     }
   }
 
   if (contentCount === 0 || contentCount < Math.max(1, Math.floor(tasksCompleted / 5))) {
-    return "Контент - это твои продажи. Давай создадим пост и откроем новый диалог с клиентом.";
+    return "recommendation.firstPost";
   }
 
   if (firstMoneySuggestion(aiMode, tasksCompleted)) {
-    return "Ты сделал достаточно стартовых шагов. Следующий фокус - первый платеж за 7 дней.";
+    return "recommendation.mode.FIRST_MONEY_MODE";
   }
 
   return recommendationForMode(aiMode);
@@ -258,12 +258,11 @@ async function upsertAchievement(
   userId: string,
   type: string,
   title: string,
-  description: string,
-  icon?: string
+  description: string
 ) {
   await tx.achievement.upsert({
     where: { userId_type: { userId, type } },
-    update: {},
-    create: { userId, type, title, description, icon }
+    update: { icon: null },
+    create: { userId, type, title, description, icon: null }
   });
 }

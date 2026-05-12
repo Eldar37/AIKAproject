@@ -4,14 +4,14 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const passwordHash = await hash("AikaDemo2026!", 12);
+  const passwordHash = await hash("AikaStart2026!", 12);
 
   const user = await prisma.user.upsert({
-    where: { email: "demo@aika.local" },
+    where: { email: "founder@aika.local" },
     update: { passwordHash },
     create: {
-      email: "demo@aika.local",
-      name: "AIKA Demo",
+      email: "founder@aika.local",
+      name: "AIKA Founder",
       passwordHash,
       profile: {
         create: {
@@ -26,11 +26,11 @@ async function main() {
         create: {
           name: "Instagram studio",
           niche: "beauty",
-          description: "Небольшой онлайн-бизнес для услуг красоты в Бишкеке.",
+          description: "Small online beauty-services business in Bishkek.",
           stage: "START",
           isOnline: true,
           budget: "low",
-          targetAudience: "Девушки 18-35 в Бишкеке и Оше",
+          targetAudience: "Women 18-35 in Bishkek and Osh",
           channels: ["instagram", "whatsapp", "telegram"],
           goals: ["first_sale", "grow_audience"],
           aiMode: "START_MODE"
@@ -59,8 +59,8 @@ async function main() {
     data: [
       {
         userId: user.id,
-        title: "Опиши один оффер для Instagram",
-        description: "Сформулируй услугу, цену и результат для клиента в одном коротком сообщении.",
+        title: "task.template.start.offer.title",
+        description: "task.template.start.offer.description",
         type: "daily",
         priority: "high",
         xpReward: 20,
@@ -68,8 +68,8 @@ async function main() {
       },
       {
         userId: user.id,
-        title: "Напиши 10 потенциальным клиентам",
-        description: "Используй WhatsApp или Instagram Direct, без массовой рассылки.",
+        title: "task.template.start.contacts.title",
+        description: "task.template.start.contacts.description",
         type: "daily",
         priority: "high",
         xpReward: 25,
@@ -77,8 +77,8 @@ async function main() {
       },
       {
         userId: user.id,
-        title: "Собери 3 вопроса от аудитории",
-        description: "Опубликуй сторис с вопросом и сохрани ответы для контента.",
+        title: "task.template.start.questions.title",
+        description: "task.template.start.questions.description",
         type: "daily",
         priority: "medium",
         xpReward: 15,

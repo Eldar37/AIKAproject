@@ -4,7 +4,8 @@ import { AI_MODE_VALUES } from "@/lib/ai/modes";
 export const registerSchema = z.object({
   email: z.string().email().toLowerCase(),
   password: z.string().min(8).max(128),
-  name: z.string().min(2).max(80)
+  name: z.string().min(2).max(80),
+  language: z.enum(["ru", "ky", "en"]).optional()
 });
 
 export const loginSchema = z.object({

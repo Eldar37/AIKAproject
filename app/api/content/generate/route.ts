@@ -34,11 +34,11 @@ export async function POST(request: NextRequest) {
         `Content type: ${payload.type}`,
         `Platform: ${payload.platform}`,
         `Topic or product: ${payload.prompt}`,
-        "Return ready-to-use content in Russian. Include a clear CTA and adapt it to the selected platform."
+        "Return ready-to-use content in the user's selected language. Include a clear CTA and adapt it to the selected platform."
       ].join("\n");
 
       const aiResponse = await callAI({
-        systemPrompt: getSystemPrompt("CONTENT_MODE"),
+        systemPrompt: getSystemPrompt("CONTENT_MODE", user.profile?.language ?? "ru"),
         userMessage: formatContextualUserMessage(memory, requestText),
         maxTokens: payload.type === "plan" ? 900 : 550,
         temperature: 0.72

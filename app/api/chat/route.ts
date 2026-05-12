@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     try {
       const memory = buildBusinessMemory(user);
       const aiResponse = await callAI({
-        systemPrompt: getSystemPrompt(mode),
+        systemPrompt: getSystemPrompt(mode, user.profile?.language ?? "ru"),
         userMessage: formatContextualUserMessage(memory, payload.message),
         maxTokens: 700,
         temperature: 0.65

@@ -6,6 +6,7 @@ import { Award, Flame, Gauge, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { GlassPanel } from "@/components/ui/card";
 import { ProgressRing } from "@/components/ui/progress-ring";
+import { useI18n } from "@/components/i18n-provider";
 
 type Analytics = {
   stats: {
@@ -17,12 +18,13 @@ type Analytics = {
     growthScore: number;
     stage: string;
     streak?: { current: number; longest: number } | null;
-    achievements: Array<{ id: string; title: string; description?: string | null; icon?: string | null }>;
+    achievements: Array<{ id: string; type?: string; title: string; description?: string | null }>;
   };
   activity: Array<{ date: string; tasks: number; completed: number; content: number }>;
 };
 
 export default function AnalyticsPage() {
+  const { t } = useI18n();
   const [data, setData] = useState<Analytics | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -41,26 +43,26 @@ export default function AnalyticsPage() {
     <div className="mx-auto max-w-7xl px-5 py-6 lg:px-8">
       <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <p className="text-sm font-semibold text-primary">Growth intelligence</p>
-          <h1 className="mt-1 text-3xl font-bold">Analytics</h1>
+          <p className="text-sm font-semibold text-primary">{t("analytics.kicker")}</p>
+          <h1 className="mt-1 text-3xl font-bold">{t("analytics.title")}</h1>
         </div>
         <Badge className="border-primary/30 bg-primary/10 text-primary">{stats?.stage ?? "START"}</Badge>
       </header>
 
       <section className="mt-6 grid gap-4 lg:grid-cols-[auto_1fr]">
         <GlassPanel className="grid place-items-center">
-          <ProgressRing value={stats?.growthScore ?? 0} label="score" />
+          <ProgressRing value={stats?.growthScore ?? 0} label={t("common.score")} />
         </GlassPanel>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Metric icon={Gauge} label="Tasks completed" value={stats?.tasksCompleted ?? 0} />
-          <Metric icon={Flame} label="Current streak" value={stats?.streak?.current ?? 0} />
-          <Metric icon={Sparkles} label="XP / level" value={`${stats?.xp ?? 0} / ${stats?.level ?? 1}`} />
-          <Metric icon={Award} label="Content generated" value={stats?.contentGenerated ?? 0} />
+          <Metric icon={Gauge} label={t("analytics.tasksCompleted")} value={stats?.tasksCompleted ?? 0} />
+          <Metric icon={Flame} label={t("analytics.currentStreak")} value={stats?.streak?.current ?? 0} />
+          <Metric icon={Sparkles} label={t("analytics.xpLevel")} value={`${stats?.xp ?? 0} / ${stats?.level ?? 1}`} />
+          <Metric icon={Award} label={t("analytics.contentGenerated")} value={stats?.contentGenerated ?? 0} />
         </div>
       </section>
 
       <GlassPanel className="mt-4">
-        <h2 className="mb-4 text-xl font-bold">Tasks completed</h2>
+        <h2 className="mb-4 text-xl font-bold">{t("analytics.tasksCompleted")}</h2>
         <div className="h-72">
           {mounted ? (
             <ResponsiveContainer width="100%" height="100%">
@@ -78,17 +80,20 @@ export default function AnalyticsPage() {
       </GlassPanel>
 
       <section className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        {(stats?.achievements ?? []).map((achievement) => (
-          <GlassPanel key={achievement.id}>
-            <span className="text-2xl">{achievement.icon ?? "✓"}</span>
-            <h2 className="mt-3 font-semibold">{achievement.title}</h2>
-            <p className="mt-2 text-sm text-muted-foreground">{achievement.description}</p>
-          </GlassPanel>
-        ))}
+        {(stats?.achievements ?? []).map((achievement) => {
+          const type = achievement.type ?? "first_task";
+          return (
+            <GlassPanel key={achievement.id}>
+              <Award className="h-5 w-5 text-primary" />
+              <h2 className="mt-3 font-semibold">{t(`achievement.${type}.title`)}</h2>
+              <p className="mt-2 text-sm text-muted-foreground">{t(`achievement.${type}.description`)}</p>
+            </GlassPanel>
+          );
+        })}
         {(stats?.achievements ?? []).length === 0 ? (
           <GlassPanel>
             <Award className="mb-3 h-5 w-5 text-primary" />
-            <p className="text-sm text-muted-foreground">Badges появятся после первых действий.</p>
+            <p className="text-sm text-muted-foreground">{t("analytics.noBadges")}</p>
           </GlassPanel>
         ) : null}
       </section>

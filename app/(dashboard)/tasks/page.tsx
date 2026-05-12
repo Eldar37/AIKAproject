@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GlassPanel } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/components/i18n-provider";
 
 type Task = {
   id: string;
@@ -18,6 +19,7 @@ type Task = {
 };
 
 export default function TasksPage() {
+  const { t } = useI18n();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
@@ -38,7 +40,7 @@ export default function TasksPage() {
       body: JSON.stringify({ status })
     });
     const data = await response.json().catch(() => ({}));
-    setMessage(data.suggestion ?? "");
+    setMessage(data.suggestion ? t(data.suggestion) : "");
     await load();
   }
 
@@ -66,21 +68,21 @@ export default function TasksPage() {
     <div className="mx-auto max-w-5xl px-5 py-6 lg:px-8">
       <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <p className="text-sm font-semibold text-primary">Action engine</p>
-          <h1 className="mt-1 text-3xl font-bold">Задачи</h1>
+          <p className="text-sm font-semibold text-primary">{t("tasks.kicker")}</p>
+          <h1 className="mt-1 text-3xl font-bold">{t("tasks.title")}</h1>
         </div>
         <Button onClick={generate}>
           <RotateCcw className="h-4 w-4" />
-          Сгенерировать
+          {t("common.generate")}
         </Button>
       </header>
 
       <GlassPanel className="mt-6">
         <div className="flex flex-col gap-3 sm:flex-row">
-          <Input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Быстрая задача" />
+          <Input value={title} onChange={(event) => setTitle(event.target.value)} placeholder={t("tasks.quickPlaceholder")} />
           <Button onClick={createTask}>
             <Plus className="h-4 w-4" />
-            Добавить
+            {t("common.add")}
           </Button>
         </div>
       </GlassPanel>
@@ -92,24 +94,25 @@ export default function TasksPage() {
           <GlassPanel key={task.id} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <h2 className="font-semibold">{task.title}</h2>
-                <Badge>{task.priority}</Badge>
-                <Badge>{task.type}</Badge>
+                <h2 className="font-semibold">{t(task.title)}</h2>
+                <Badge>{t(`task.priority.${task.priority}`)}</Badge>
+                <Badge>{t(`task.type.${task.type}`)}</Badge>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">{task.description}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{task.description ? t(task.description) : null}</p>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" disabled={task.status === "skipped"} onClick={() => update(task.id, "skipped")}>
                 <XCircle className="h-4 w-4" />
-                Skip
+                {t("common.skip")}
               </Button>
               <Button size="sm" variant={task.status === "completed" ? "secondary" : "default"} disabled={task.status === "completed"} onClick={() => update(task.id, "completed")}>
                 <CheckCircle2 className="h-4 w-4" />
-                {task.status === "completed" ? "Done" : `+${task.xpReward} XP`}
+                {task.status === "completed" ? t("common.done") : `+${task.xpReward} XP`}
               </Button>
             </div>
           </GlassPanel>
         ))}
+        {tasks.length === 0 ? <p className="text-sm text-muted-foreground">{t("tasks.empty")}</p> : null}
       </div>
     </div>
   );

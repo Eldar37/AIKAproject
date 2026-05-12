@@ -6,17 +6,19 @@ import { CheckCircle2, CircleDollarSign, Lightbulb, Megaphone, Rocket, ShoppingC
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GlassPanel } from "@/components/ui/card";
+import { useI18n } from "@/components/i18n-provider";
 import { cn } from "@/lib/utils/cn";
 
 const roadmap = [
-  { key: "idea_validation", title: "Idea Validation", stage: "START", icon: Lightbulb, text: "Проверить боль, сегмент и оффер." },
-  { key: "first_income", title: "First Income", stage: "START", icon: CircleDollarSign, text: "Получить первый платеж или бронь." },
-  { key: "online_presence", title: "Online Presence", stage: "GROWTH", icon: Megaphone, text: "Стабильный Instagram, TikTok, Telegram или WhatsApp-контур." },
-  { key: "sales_system", title: "Sales System", stage: "GROWTH", icon: ShoppingCart, text: "Повторяемые заявки, follow-up и отзывы." },
-  { key: "scale", title: "Scale", stage: "SCALE", icon: Rocket, text: "Метрики, делегирование, партнерства и регионы." }
+  { key: "idea_validation", title: "journey.idea.title", stage: "START", icon: Lightbulb, text: "journey.idea.text" },
+  { key: "first_income", title: "journey.income.title", stage: "START", icon: CircleDollarSign, text: "journey.income.text" },
+  { key: "online_presence", title: "journey.presence.title", stage: "GROWTH", icon: Megaphone, text: "journey.presence.text" },
+  { key: "sales_system", title: "journey.sales.title", stage: "GROWTH", icon: ShoppingCart, text: "journey.sales.text" },
+  { key: "scale", title: "journey.scale.title", stage: "SCALE", icon: Rocket, text: "journey.scale.text" }
 ];
 
 export default function JourneyPage() {
+  const { t } = useI18n();
   const [stage, setStage] = useState("START");
   const [milestones, setMilestones] = useState<string[]>([]);
 
@@ -35,8 +37,8 @@ export default function JourneyPage() {
     <div className="mx-auto max-w-6xl px-5 py-6 lg:px-8">
       <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <p className="text-sm font-semibold text-primary">Roadmap</p>
-          <h1 className="mt-1 text-3xl font-bold">Journey Map</h1>
+          <p className="text-sm font-semibold text-primary">{t("journey.kicker")}</p>
+          <h1 className="mt-1 text-3xl font-bold">{t("journey.title")}</h1>
         </div>
         <Badge className="border-primary/30 bg-primary/10 text-primary">{stage}</Badge>
       </header>
@@ -55,14 +57,14 @@ export default function JourneyPage() {
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-sm text-muted-foreground">0{index + 1}</span>
-                    <h2 className="text-xl font-bold">{item.title}</h2>
-                    {current ? <Badge className="border-primary/30 bg-primary/10 text-primary">current</Badge> : null}
-                    {completed ? <Badge className="border-secondary/30 bg-secondary/10 text-secondary">completed</Badge> : null}
+                    <h2 className="text-xl font-bold">{t(item.title)}</h2>
+                    {current ? <Badge className="border-primary/30 bg-primary/10 text-primary">{t("common.current")}</Badge> : null}
+                    {completed ? <Badge className="border-secondary/30 bg-secondary/10 text-secondary">{t("common.completed")}</Badge> : null}
                   </div>
-                  <p className="mt-2 text-sm text-muted-foreground">{item.text}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">{t(item.text)}</p>
                 </div>
                 <Button asChild variant={current ? "default" : "outline"}>
-                  <Link href={current ? "/tasks" : "/analytics"}>{current ? "Next steps" : "Progress"}</Link>
+                  <Link href={current ? "/tasks" : "/analytics"}>{current ? t("common.nextSteps") : t("common.progress")}</Link>
                 </Button>
               </div>
             </GlassPanel>

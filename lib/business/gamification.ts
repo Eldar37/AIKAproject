@@ -66,9 +66,9 @@ export function updateStreakState(lastActive: Date, now = new Date(), current = 
 }
 
 export function achievementForTaskCount(tasksCompleted: number) {
-  if (tasksCompleted >= 30) return { type: "task_30", title: "30 действий", icon: "🚀" };
-  if (tasksCompleted >= 10) return { type: "task_10", title: "10 шагов к бизнесу", icon: "📈" };
-  if (tasksCompleted >= 1) return { type: "first_task", title: "Первое действие", icon: "✅" };
+  if (tasksCompleted >= 30) return { type: "task_30", title: "task_30" };
+  if (tasksCompleted >= 10) return { type: "task_10", title: "task_10" };
+  if (tasksCompleted >= 1) return { type: "first_task", title: "first_task" };
   return null;
 }
 

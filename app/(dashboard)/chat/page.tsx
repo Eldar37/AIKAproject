@@ -6,16 +6,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GlassPanel } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { useI18n } from "@/components/i18n-provider";
 import { cn } from "@/lib/utils/cn";
 import { useAikaStore } from "@/store/useStore";
 
 const modes = ["START_MODE", "GROWTH_MODE", "SCALE_MODE", "CONTENT_MODE", "FIRST_MONEY_MODE"];
-const quickPrompts: Record<string, string[]> = {
-  START_MODE: ["Проверь мою идею", "Сделай оффер", "Кому написать первым?"],
-  GROWTH_MODE: ["Как увеличить заявки?", "План сторис", "Собери отзывы"],
-  SCALE_MODE: ["Какие метрики важны?", "Что делегировать?", "Где партнерства?"],
-  CONTENT_MODE: ["5 хуков для Reels", "Пост для Instagram", "Telegram продажа"],
-  FIRST_MONEY_MODE: ["План на 7 дней", "Скрипт сообщения", "Как получить предоплату?"]
+const quickPromptKeys: Record<string, string[]> = {
+  START_MODE: ["chat.quick.start1", "chat.quick.start2", "chat.quick.start3"],
+  GROWTH_MODE: ["chat.quick.growth1", "chat.quick.growth2", "chat.quick.growth3"],
+  SCALE_MODE: ["chat.quick.scale1", "chat.quick.scale2", "chat.quick.scale3"],
+  CONTENT_MODE: ["chat.quick.content1", "chat.quick.content2", "chat.quick.content3"],
+  FIRST_MONEY_MODE: ["chat.quick.money1", "chat.quick.money2", "chat.quick.money3"]
 };
 
 type Message = {
@@ -25,6 +26,7 @@ type Message = {
 };
 
 export default function ChatPage() {
+  const { t } = useI18n();
   const { aiMode, setAiMode } = useAikaStore();
   const [conversationId, setConversationId] = useState<string | undefined>();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -72,7 +74,7 @@ export default function ChatPage() {
     setLoading(false);
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
-      setMessages((current) => [...current, { role: "assistant", content: data.error ?? "AIKA сейчас недоступна. Проверь HF_API_KEY." }]);
+      setMessages((current) => [...current, { role: "assistant", content: data.error ?? t("chat.aiUnavailable") }]);
       return;
     }
 
@@ -87,13 +89,13 @@ export default function ChatPage() {
   }
 
   async function createTask(content: string) {
-    const title = content.split("\n").find(Boolean)?.replace(/^[-*\d.\s]+/, "").slice(0, 120) || "Совет от AIKA";
+    const title = content.split("\n").find(Boolean)?.replace(/^[-*\d.\s]+/, "").slice(0, 120) || t("chat.fallbackTitle");
     const response = await fetch("/api/tasks", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, description: content.slice(0, 480), type: "daily", priority: "medium", xpReward: 15 })
     });
-    setNotice(response.ok ? "Задача создана." : "Не удалось создать задачу.");
+    setNotice(response.ok ? t("chat.taskCreated") : t("chat.taskFailed"));
   }
 
   return (
@@ -101,8 +103,8 @@ export default function ChatPage() {
       <header className="border-b border-border bg-background/85 px-5 py-4 backdrop-blur lg:px-8">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-semibold text-primary">AI mentor</p>
-            <h1 className="text-2xl font-bold">AIKA Chat</h1>
+            <p className="text-sm font-semibold text-primary">{t("chat.kicker")}</p>
+            <h1 className="text-2xl font-bold">{t("chat.title")}</h1>
           </div>
           <div className="flex flex-wrap gap-2">
             {modes.map((mode) => (
@@ -114,7 +116,7 @@ export default function ChatPage() {
                   aiMode === mode && "border-primary bg-primary/10 text-primary"
                 )}
               >
-                {mode.replace("_MODE", "")}
+                {t(`mode.${mode}`)}
               </button>
             ))}
           </div>
@@ -123,9 +125,9 @@ export default function ChatPage() {
 
       <main className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col px-5 lg:px-8">
         <div className="flex gap-2 overflow-x-auto py-4">
-          {(quickPrompts[aiMode] ?? quickPrompts.START_MODE).map((prompt) => (
-            <Button key={prompt} variant="outline" size="sm" onClick={() => send(prompt)}>
-              {prompt}
+          {(quickPromptKeys[aiMode] ?? quickPromptKeys.START_MODE).map((promptKey) => (
+            <Button key={promptKey} variant="outline" size="sm" onClick={() => send(t(promptKey))}>
+              {t(promptKey)}
             </Button>
           ))}
         </div>
@@ -134,8 +136,8 @@ export default function ChatPage() {
           {messages.length === 0 ? (
             <GlassPanel className="mx-auto mt-12 max-w-xl text-center">
               <Bot className="mx-auto mb-4 h-8 w-8 text-primary" />
-              <h2 className="text-xl font-bold">Рядом умный наставник</h2>
-              <p className="mt-2 text-sm text-muted-foreground">AIKA отвечает с учетом твоего бизнеса, этапа, задач и каналов продаж.</p>
+              <h2 className="text-xl font-bold">{t("chat.emptyTitle")}</h2>
+              <p className="mt-2 text-sm text-muted-foreground">{t("chat.emptyText")}</p>
             </GlassPanel>
           ) : null}
 
@@ -152,7 +154,7 @@ export default function ChatPage() {
                   {message.role === "assistant" ? (
                     <Button variant="ghost" size="sm" className="mt-3" onClick={() => createTask(message.content)}>
                       <CheckSquare className="h-4 w-4" />
-                      Create task from this advice
+                      {t("chat.createTask")}
                     </Button>
                   ) : null}
                 </div>
@@ -163,14 +165,14 @@ export default function ChatPage() {
                 ) : null}
               </div>
             ))}
-            {loading ? <Badge className="border-primary/30 bg-primary/10 text-primary">AIKA думает...</Badge> : null}
+            {loading ? <Badge className="border-primary/30 bg-primary/10 text-primary">{t("chat.loading")}</Badge> : null}
             <div ref={bottomRef} />
           </div>
         </div>
 
         {notice ? <p className="py-2 text-sm text-secondary">{notice}</p> : null}
         <form onSubmit={submit} className="flex gap-3 py-4">
-          <Textarea value={input} onChange={(event) => setInput(event.target.value)} placeholder="Напиши вопрос про бизнес, продажи или контент" className="min-h-14 flex-1 resize-none" />
+          <Textarea value={input} onChange={(event) => setInput(event.target.value)} placeholder={t("chat.placeholder")} className="min-h-14 flex-1 resize-none" />
           <Button type="submit" size="icon" disabled={loading}>
             <Send className="h-4 w-4" />
           </Button>

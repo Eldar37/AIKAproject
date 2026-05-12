@@ -6,13 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GlassPanel } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { useI18n } from "@/components/i18n-provider";
 
 const contentTypes = [
-  { value: "instagram", label: "Instagram post" },
-  { value: "story", label: "Story" },
-  { value: "ad", label: "Ad copy" },
-  { value: "product", label: "Product description" },
-  { value: "plan", label: "Content plan" }
+  { value: "instagram", label: "content.instagram" },
+  { value: "story", label: "content.story" },
+  { value: "ad", label: "content.ad" },
+  { value: "product", label: "content.product" },
+  { value: "plan", label: "content.plan" }
 ];
 const platforms = ["Instagram", "TikTok", "Telegram", "WhatsApp"];
 
@@ -26,6 +27,7 @@ type HistoryItem = {
 };
 
 export default function ContentPage() {
+  const { t } = useI18n();
   const [type, setType] = useState("instagram");
   const [platform, setPlatform] = useState("Instagram");
   const [prompt, setPrompt] = useState("");
@@ -58,7 +60,7 @@ export default function ContentPage() {
     setLoading(false);
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
-      setError(data.error ?? "Не удалось сгенерировать контент.");
+      setError(data.error ?? t("content.error"));
       return;
     }
     setResult(data.content.result);
@@ -69,15 +71,15 @@ export default function ContentPage() {
   return (
     <div className="mx-auto max-w-6xl px-5 py-6 lg:px-8">
       <header>
-        <p className="text-sm font-semibold text-primary">Content engine</p>
-        <h1 className="mt-1 text-3xl font-bold">Генератор контента</h1>
+        <p className="text-sm font-semibold text-primary">{t("content.kicker")}</p>
+        <h1 className="mt-1 text-3xl font-bold">{t("content.title")}</h1>
       </header>
 
       <section className="mt-6 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
         <GlassPanel>
           <form onSubmit={submit} className="space-y-5">
             <div>
-              <p className="mb-2 text-sm font-semibold">Тип</p>
+              <p className="mb-2 text-sm font-semibold">{t("common.type")}</p>
               <div className="grid gap-2 sm:grid-cols-2">
                 {contentTypes.map((item) => (
                   <button
@@ -86,13 +88,13 @@ export default function ContentPage() {
                     onClick={() => setType(item.value)}
                     className={`rounded-md border px-3 py-2 text-left text-sm ${type === item.value ? "border-primary bg-primary/10 text-primary" : "border-border"}`}
                   >
-                    {item.label}
+                    {t(item.label)}
                   </button>
                 ))}
               </div>
             </div>
             <div>
-              <p className="mb-2 text-sm font-semibold">Платформа</p>
+              <p className="mb-2 text-sm font-semibold">{t("common.platform")}</p>
               <div className="grid grid-cols-2 gap-2">
                 {platforms.map((item) => (
                   <button
@@ -106,10 +108,10 @@ export default function ContentPage() {
                 ))}
               </div>
             </div>
-            <Textarea value={prompt} onChange={(event) => setPrompt(event.target.value)} placeholder="Продукт, тема, акция или идея" required />
+            <Textarea value={prompt} onChange={(event) => setPrompt(event.target.value)} placeholder={t("content.prompt")} required />
             {error ? <p className="text-sm text-destructive">{error}</p> : null}
             <Button disabled={loading || !prompt.trim()} className="w-full">
-              {loading ? "Генерация..." : "Сгенерировать"}
+              {loading ? t("common.generating") : t("common.generate")}
               <Send className="h-4 w-4" />
             </Button>
           </form>
@@ -117,41 +119,41 @@ export default function ContentPage() {
 
         <GlassPanel>
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-xl font-bold">Результат</h2>
+            <h2 className="text-xl font-bold">{t("common.result")}</h2>
             {result ? (
               <Button variant="ghost" size="sm" onClick={() => navigator.clipboard.writeText(result)}>
                 <Copy className="h-4 w-4" />
-                Copy
+                {t("common.copy")}
               </Button>
             ) : null}
           </div>
           <div className="min-h-72 rounded-md border border-border bg-background/45 p-4">
-            {result ? <p className="whitespace-pre-wrap text-sm leading-6">{result}</p> : <p className="text-sm text-muted-foreground">Готовый текст появится здесь.</p>}
+            {result ? <p className="whitespace-pre-wrap text-sm leading-6">{result}</p> : <p className="text-sm text-muted-foreground">{t("content.ready")}</p>}
           </div>
         </GlassPanel>
       </section>
 
       <section className="mt-4">
-        <h2 className="mb-3 text-xl font-bold">История</h2>
+        <h2 className="mb-3 text-xl font-bold">{t("common.history")}</h2>
         <div className="grid gap-3 md:grid-cols-2">
           {history.map((item) => (
             <GlassPanel key={item.id}>
               <div className="mb-3 flex flex-wrap gap-2">
-                <Badge>{item.type}</Badge>
+                <Badge>{t(`content.${item.type}`)}</Badge>
                 <Badge>{item.platform}</Badge>
               </div>
               <p className="text-sm font-semibold">{item.prompt}</p>
               <p className="mt-3 line-clamp-4 whitespace-pre-wrap text-sm text-muted-foreground">{item.result}</p>
               <Button variant="ghost" size="sm" className="mt-3" onClick={() => navigator.clipboard.writeText(item.result)}>
                 <Copy className="h-4 w-4" />
-                Copy
+                {t("common.copy")}
               </Button>
             </GlassPanel>
           ))}
           {history.length === 0 ? (
             <GlassPanel>
               <FileText className="mb-3 h-5 w-5 text-primary" />
-              <p className="text-sm text-muted-foreground">История появится после первой генерации.</p>
+              <p className="text-sm text-muted-foreground">{t("content.emptyHistory")}</p>
             </GlassPanel>
           ) : null}
         </div>

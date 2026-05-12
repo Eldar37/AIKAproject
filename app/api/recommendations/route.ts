@@ -1,4 +1,3 @@
-import { recommendationForMode } from "@/lib/ai/modes";
 import { getDashboardSnapshot } from "@/lib/business/tasks";
 import { requireUserId } from "@/lib/auth/middleware";
 import { errorResponse, handleRouteError, jsonResponse } from "@/lib/utils/http";
@@ -16,13 +15,9 @@ export async function GET() {
     const mode = business?.aiMode ?? "START_MODE";
     const recommendations = [
       snapshot.insight,
-      recommendationForMode(mode),
-      business?.firstSaleDone
-        ? "Закрепи первую продажу: попроси отзыв, повтори канал, предложи следующий продукт."
-        : "Сегодня нужен один реальный контакт с клиентом: вопрос, оффер или follow-up.",
-      snapshot.contentCount === 0
-        ? "Создай первый пост: проблема клиента, обещанный результат, простой призыв написать."
-        : "Переиспользуй лучший контент недели в сторис, Telegram и WhatsApp-статусе."
+      `recommendation.mode.${mode}`,
+      business?.firstSaleDone ? "recommendation.firstSaleDone" : "recommendation.firstContact",
+      snapshot.contentCount === 0 ? "recommendation.firstPost" : "recommendation.reuseContent"
     ];
 
     return jsonResponse({ recommendations: Array.from(new Set(recommendations)) });

@@ -20,7 +20,7 @@ npm install
 npm run build && npm run start
 ```
 
-`npm run build` runs `prisma generate && prisma migrate deploy && next build`, so `DATABASE_URL` must point to a running PostgreSQL database before building.
+`npm run build` runs `prisma generate && next build`. Run database migrations separately with `npm run db:deploy` before production traffic.
 
 ## Environment Variables
 
@@ -44,7 +44,29 @@ npm run build && npm run start
 docker compose up --build
 ```
 
-The included Dockerfile follows the same app contract and runs `npm run build`. Because that build runs migrations, Docker image builds need a reachable database URL. For CI/CD, either provide a build-time database or run `npm run build` in an environment where Postgres is available.
+The included Dockerfile follows the same app contract and runs `npm run build`. Run `npm run db:deploy` against the production database before starting production traffic.
+
+## Vercel
+
+Use these project settings:
+
+- Build command: `npm run build`
+- Install command: `npm install`
+- Output directory: `.next`
+
+Add environment variables in Vercel:
+
+- `DATABASE_URL`
+- `JWT_SECRET`
+- `HF_API_KEY`
+- `NEXT_PUBLIC_APP_URL`
+- optional model overrides: `HF_MODEL_PRIMARY`, `HF_MODEL_FALLBACK_1`, `HF_MODEL_FALLBACK_2`
+
+Run migrations from your local machine or CI before release:
+
+```bash
+npm run db:deploy
+```
 
 ## API Overview
 
@@ -103,13 +125,9 @@ npm run dev
 npm run build
 npm run start
 npm run db:migrate
+npm run db:deploy
 npm run db:seed
 npm run db:studio
 npm run lint
 npm run test
 ```
-
-Demo seed account:
-
-- Email: `demo@aika.local`
-- Password: `AikaDemo2026!`
