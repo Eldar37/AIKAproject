@@ -79,22 +79,22 @@ export default function DashboardPage() {
   const insightKey = recommendations[0] ?? "dashboard.defaultInsight";
 
   return (
-    <div className="mx-auto max-w-7xl px-5 py-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-5 sm:px-5 sm:py-6 lg:px-8">
       <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
+        <div className="min-w-0">
           <p className="text-sm font-semibold text-primary">{t("dashboard.kicker")}</p>
-          <h1 className="mt-1 text-3xl font-bold">
+          <h1 className="break-anywhere mt-1 text-2xl font-bold leading-tight sm:text-3xl">
             {loading ? t("common.loading") : t("dashboard.greeting", { name: greetingName })}
           </h1>
         </div>
-        <div className="flex gap-2">
-          <Button asChild variant="outline">
+        <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto">
+          <Button asChild variant="outline" className="w-full sm:w-auto">
             <Link href="/content">
               <FileText className="h-4 w-4" />
               {t("nav.content")}
             </Link>
           </Button>
-          <Button asChild>
+          <Button asChild className="w-full sm:w-auto">
             <Link href="/chat">
               <Bot className="h-4 w-4" />
               {t("dashboard.chatCta")}
@@ -116,16 +116,16 @@ export default function DashboardPage() {
       <section className="mt-6 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         <GlassPanel>
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-            <div>
+            <div className="min-w-0">
               <Badge className="border-primary/30 bg-primary/10 text-primary">{user?.business?.stage ?? "START"}</Badge>
-              <h2 className="mt-4 text-2xl font-bold">{user?.business?.name ?? t("dashboard.yourBusiness")}</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
+              <h2 className="break-anywhere mt-4 text-xl font-bold sm:text-2xl">{user?.business?.name ?? t("dashboard.yourBusiness")}</h2>
+              <p className="break-anywhere mt-2 text-sm text-muted-foreground">
                 {t("dashboard.mode")}: {t(`mode.${user?.business?.aiMode ?? "START_MODE"}`)}
               </p>
             </div>
-            <ProgressRing value={growthScore} label={t("common.growth")} />
+            <ProgressRing value={growthScore} label={t("common.growth")} className="mx-auto sm:mx-0" />
           </div>
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
             <Metric icon={CheckCircle2} label={t("dashboard.tasksDone")} value={analytics?.stats?.tasksCompleted ?? user?.progress?.tasksCompleted ?? 0} />
             <Metric icon={Flame} label={t("dashboard.streak")} value={user?.streaks?.current ?? 0} />
             <Metric icon={Sparkles} label={t("dashboard.xpLevel")} value={`${user?.profile?.xp ?? 0} / ${user?.profile?.level ?? 1}`} />
@@ -157,11 +157,11 @@ export default function DashboardPage() {
           <div className="space-y-3">
             {tasks.slice(0, 3).map((task) => (
               <div key={task.id} className="flex flex-col gap-3 rounded-md border border-border bg-background/45 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <p className="font-semibold">{t(task.title)}</p>
+                <div className="min-w-0">
+                  <p className="break-words font-semibold">{t(task.title)}</p>
                   <p className="mt-1 text-sm text-muted-foreground">{task.description ? t(task.description) : null}</p>
                 </div>
-                <Button size="sm" variant={task.status === "completed" ? "secondary" : "outline"} disabled={task.status === "completed"} onClick={() => completeTask(task.id)}>
+                <Button className="w-full sm:w-auto" size="sm" variant={task.status === "completed" ? "secondary" : "outline"} disabled={task.status === "completed"} onClick={() => completeTask(task.id)}>
                   {task.status === "completed" ? t("common.done") : `+${task.xpReward} XP`}
                 </Button>
               </div>
@@ -174,9 +174,9 @@ export default function DashboardPage() {
           <h2 className="text-xl font-bold">{t("dashboard.activity")}</h2>
           <div className="mt-4 space-y-3">
             {(analytics?.stats?.achievements ?? []).slice(0, 4).map((achievement) => (
-              <div key={achievement.id} className="flex items-center gap-3 rounded-md border border-border bg-background/45 p-3">
+              <div key={achievement.id} className="flex min-w-0 items-center gap-3 rounded-md border border-border bg-background/45 p-3">
                 <Award className="h-4 w-4 text-primary" />
-                <span className="text-sm">{t(`achievement.${achievement.type ?? "first_task"}.title`)}</span>
+                <span className="min-w-0 break-words text-sm">{t(`achievement.${achievement.type ?? "first_task"}.title`)}</span>
               </div>
             ))}
             {(analytics?.stats?.achievements ?? []).length === 0 ? <p className="text-sm text-muted-foreground">{t("dashboard.noAchievements")}</p> : null}

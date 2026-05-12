@@ -61,15 +61,15 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </Button>
       </aside>
 
-      <main className="pb-24 xl:ml-64 xl:pb-0">
-        <div className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background/92 px-5 py-3 backdrop-blur xl:hidden">
+      <main className="pb-[calc(5.75rem+env(safe-area-inset-bottom))] xl:ml-64 xl:pb-0">
+        <div className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border bg-background/92 px-4 py-3 backdrop-blur xl:hidden">
           <AikaLogo href="/dashboard" compact />
           <LanguageSwitcher />
         </div>
         {children}
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-6 border-t border-border bg-background/92 px-2 py-2 backdrop-blur xl:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-6 border-t border-border bg-background/92 px-1.5 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur xl:hidden">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = pathname === item.href;
@@ -77,10 +77,13 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <Link
               key={item.href}
               href={item.href}
-              className={cn("grid place-items-center gap-1 rounded-md py-2 text-[11px] text-muted-foreground", active && "bg-muted text-foreground")}
+              className={cn(
+                "grid min-w-0 place-items-center gap-1 rounded-md px-1 py-2 text-[10px] leading-none text-muted-foreground",
+                active && "bg-muted text-foreground"
+              )}
             >
               <Icon className="h-4 w-4" />
-              <span>{t(item.label)}</span>
+              <span className="max-w-full truncate">{t(item.label)}</span>
             </Link>
           );
         })}

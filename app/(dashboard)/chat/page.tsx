@@ -99,20 +99,20 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex h-screen flex-col xl:h-screen">
-      <header className="border-b border-border bg-background/85 px-5 py-4 backdrop-blur lg:px-8">
+    <div className="flex min-h-[calc(100svh-9.5rem)] flex-col xl:h-screen xl:min-h-0">
+      <header className="border-b border-border bg-background/85 px-4 py-3 backdrop-blur sm:px-5 sm:py-4 lg:px-8">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
+          <div className="min-w-0">
             <p className="text-sm font-semibold text-primary">{t("chat.kicker")}</p>
-            <h1 className="text-2xl font-bold">{t("chat.title")}</h1>
+            <h1 className="break-words text-2xl font-bold leading-tight">{t("chat.title")}</h1>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="scrollbar-hide -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0 sm:pb-0">
             {modes.map((mode) => (
               <button
                 key={mode}
                 onClick={() => setAiMode(mode)}
                 className={cn(
-                  "rounded-md border border-border px-3 py-2 text-xs font-semibold text-muted-foreground",
+                  "shrink-0 rounded-md border border-border px-3 py-2 text-xs font-semibold text-muted-foreground",
                   aiMode === mode && "border-primary bg-primary/10 text-primary"
                 )}
               >
@@ -123,18 +123,18 @@ export default function ChatPage() {
         </div>
       </header>
 
-      <main className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col px-5 lg:px-8">
-        <div className="flex gap-2 overflow-x-auto py-4">
+      <main className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col px-4 sm:px-5 lg:px-8">
+        <div className="scrollbar-hide -mx-4 flex gap-2 overflow-x-auto px-4 py-3 sm:mx-0 sm:px-0 sm:py-4">
           {(quickPromptKeys[aiMode] ?? quickPromptKeys.START_MODE).map((promptKey) => (
-            <Button key={promptKey} variant="outline" size="sm" onClick={() => send(t(promptKey))}>
+            <Button key={promptKey} className="h-auto max-w-[78vw] shrink-0 whitespace-normal text-left" variant="outline" size="sm" onClick={() => send(t(promptKey))}>
               {t(promptKey)}
             </Button>
           ))}
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto rounded-lg border border-border bg-background/35 p-3">
+        <div className="min-h-0 flex-1 overflow-y-auto rounded-lg border border-border bg-background/35 p-2 sm:p-3">
           {messages.length === 0 ? (
-            <GlassPanel className="mx-auto mt-12 max-w-xl text-center">
+            <GlassPanel className="mx-auto mt-8 max-w-xl text-center sm:mt-12">
               <Bot className="mx-auto mb-4 h-8 w-8 text-primary" />
               <h2 className="text-xl font-bold">{t("chat.emptyTitle")}</h2>
               <p className="mt-2 text-sm text-muted-foreground">{t("chat.emptyText")}</p>
@@ -143,16 +143,16 @@ export default function ChatPage() {
 
           <div className="space-y-4">
             {messages.map((message, index) => (
-              <div key={`${message.id ?? index}-${message.role}`} className={cn("flex gap-3", message.role === "user" && "justify-end")}>
+              <div key={`${message.id ?? index}-${message.role}`} className={cn("flex gap-2 sm:gap-3", message.role === "user" && "justify-end")}>
                 {message.role === "assistant" ? (
                   <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground">
                     <Bot className="h-4 w-4" />
                   </span>
                 ) : null}
-                <div className={cn("max-w-[86%] rounded-lg border border-border p-4 text-sm leading-6", message.role === "user" ? "bg-primary text-primary-foreground" : "bg-card")}>
-                  <p className="whitespace-pre-wrap">{message.content}</p>
+                <div className={cn("max-w-[88%] rounded-lg border border-border p-3 text-sm leading-6 sm:max-w-[86%] sm:p-4", message.role === "user" ? "bg-primary text-primary-foreground" : "bg-card")}>
+                  <p className="break-anywhere whitespace-pre-wrap">{message.content}</p>
                   {message.role === "assistant" ? (
-                    <Button variant="ghost" size="sm" className="mt-3" onClick={() => createTask(message.content)}>
+                    <Button variant="ghost" size="sm" className="mt-3 whitespace-normal text-left" onClick={() => createTask(message.content)}>
                       <CheckSquare className="h-4 w-4" />
                       {t("chat.createTask")}
                     </Button>
@@ -171,8 +171,8 @@ export default function ChatPage() {
         </div>
 
         {notice ? <p className="py-2 text-sm text-secondary">{notice}</p> : null}
-        <form onSubmit={submit} className="flex gap-3 py-4">
-          <Textarea value={input} onChange={(event) => setInput(event.target.value)} placeholder={t("chat.placeholder")} className="min-h-14 flex-1 resize-none" />
+        <form onSubmit={submit} className="flex gap-2 py-3 sm:gap-3 sm:py-4">
+          <Textarea value={input} onChange={(event) => setInput(event.target.value)} placeholder={t("chat.placeholder")} className="min-h-12 flex-1 resize-none sm:min-h-14" />
           <Button type="submit" size="icon" disabled={loading}>
             <Send className="h-4 w-4" />
           </Button>

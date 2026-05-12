@@ -97,18 +97,18 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="min-h-screen px-5 py-8">
+    <main className="min-h-[100svh] px-4 py-5 sm:px-5 sm:py-8">
       <div className="mx-auto max-w-4xl">
-        <div className="mb-8 flex items-start justify-between gap-4">
-          <div>
+        <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
             <AikaLogo className="mb-5" />
             <p className="text-sm font-semibold text-primary">{t("onboarding.kicker")}</p>
-            <h1 className="mt-2 text-3xl font-bold sm:text-4xl">{t("onboarding.title")}</h1>
+            <h1 className="break-words mt-2 text-2xl font-bold leading-tight sm:text-4xl">{t("onboarding.title")}</h1>
           </div>
-          <LanguageSwitcher />
+          <LanguageSwitcher className="w-fit" />
         </div>
 
-        <div className="mb-6 grid grid-cols-5 gap-2">
+        <div className="mb-5 grid grid-cols-5 gap-1.5 sm:mb-6 sm:gap-2">
           {stepKeys.map((item, index) => {
             const Icon = item.icon;
             return (
@@ -117,7 +117,7 @@ export default function OnboardingPage() {
                 type="button"
                 onClick={() => setStep(index)}
                 className={cn(
-                  "grid min-h-16 place-items-center rounded-md border border-border bg-card/70 p-2 text-xs text-muted-foreground",
+                  "grid min-h-12 place-items-center rounded-md border border-border bg-card/70 p-2 text-xs text-muted-foreground sm:min-h-16",
                   index === step && "border-primary bg-primary/10 text-primary"
                 )}
               >
@@ -129,10 +129,10 @@ export default function OnboardingPage() {
         </div>
 
         <form onSubmit={submit}>
-          <GlassPanel className="min-h-[420px]">
+          <GlassPanel className="min-h-[360px] sm:min-h-[420px]">
             {step === 0 ? (
               <section className="space-y-5">
-                <h2 className="text-2xl font-bold">{t("onboarding.hasBusiness")}</h2>
+                <h2 className="text-xl font-bold leading-tight sm:text-2xl">{t("onboarding.hasBusiness")}</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {[
                     { value: false, title: "onboarding.idea", text: "onboarding.ideaText" },
@@ -155,7 +155,7 @@ export default function OnboardingPage() {
 
             {step === 1 ? (
               <section className="space-y-5">
-                <h2 className="text-2xl font-bold">{t("onboarding.nicheAudience")}</h2>
+                <h2 className="text-xl font-bold leading-tight sm:text-2xl">{t("onboarding.nicheAudience")}</h2>
                 <select
                   value={state.niche}
                   onChange={(event) => update("niche", event.target.value)}
@@ -174,7 +174,7 @@ export default function OnboardingPage() {
 
             {step === 2 ? (
               <section className="space-y-5">
-                <h2 className="text-2xl font-bold">{t("onboarding.formatChannels")}</h2>
+                <h2 className="text-xl font-bold leading-tight sm:text-2xl">{t("onboarding.formatChannels")}</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {[
                     { value: true, title: "common.online" },
@@ -208,7 +208,7 @@ export default function OnboardingPage() {
 
             {step === 3 ? (
               <section className="space-y-5">
-                <h2 className="text-2xl font-bold">{t("onboarding.budgetGoal")}</h2>
+                <h2 className="text-xl font-bold leading-tight sm:text-2xl">{t("onboarding.budgetGoal")}</h2>
                 <select value={state.budget} onChange={(event) => update("budget", event.target.value as OnboardingState["budget"])} className="h-11 w-full rounded-md border border-input bg-background/70 px-3 text-sm">
                   <option value="low">{t("common.low")}</option>
                   <option value="medium">{t("common.medium")}</option>
@@ -226,7 +226,7 @@ export default function OnboardingPage() {
 
             {step === 4 ? (
               <section className="space-y-5">
-                <h2 className="text-2xl font-bold">{t("onboarding.yourExperience")}</h2>
+                <h2 className="text-xl font-bold leading-tight sm:text-2xl">{t("onboarding.yourExperience")}</h2>
                 <div className="grid gap-3 sm:grid-cols-3">
                   {[
                     { value: "beginner", title: "onboarding.exp.beginner" },
@@ -250,11 +250,11 @@ export default function OnboardingPage() {
 
           {error ? <p className="mt-4 text-sm text-destructive">{error}</p> : null}
 
-          <div className="mt-6 flex justify-between">
-            <Button type="button" variant="outline" disabled={step === 0} onClick={() => setStep((current) => Math.max(0, current - 1))}>
+          <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
+            <Button type="button" variant="outline" className="w-full sm:w-auto" disabled={step === 0} onClick={() => setStep((current) => Math.max(0, current - 1))}>
               {t("common.back")}
             </Button>
-            <Button disabled={!canContinue || loading} type="submit">
+            <Button disabled={!canContinue || loading} type="submit" className="w-full sm:w-auto">
               {step === stepKeys.length - 1 ? (loading ? t("common.generating") : t("common.createPlan")) : t("common.next")}
               <ArrowRight className="h-4 w-4" />
             </Button>

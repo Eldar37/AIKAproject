@@ -48,11 +48,15 @@
 
 html {
   min-height: 100%;
+  overflow-x: hidden;
   background: hsl(var(--background));
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
-  min-height: 100vh;
+  min-height: 100svh;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at top left, rgba(46, 144, 250, 0.14), transparent 32rem),
     radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.08), transparent 28rem),
@@ -80,4 +84,17 @@ select {
 
 .text-balance {
   text-wrap: balance;
+}
+
+.break-anywhere {
+  overflow-wrap: anywhere;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

@@ -43,19 +43,19 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="grid min-h-screen place-items-center px-5 py-12">
-      <GlassPanel className="w-full max-w-md">
-        <div className="mb-8 flex items-center justify-between gap-4">
+    <main className="grid min-h-[100svh] place-items-center px-4 py-6 sm:px-5 sm:py-12">
+      <GlassPanel className="w-full max-w-[25rem]">
+        <div className="mb-7 flex items-center justify-between gap-3">
           <AikaLogo />
           <LanguageSwitcher />
         </div>
-        <h1 className="text-3xl font-bold">{t("auth.register.title")}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">{t("auth.register.subtitle")}</p>
-        <form onSubmit={submit} className="mt-7 space-y-4">
+        <h1 className="text-2xl font-bold leading-tight sm:text-3xl">{t("auth.register.title")}</h1>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">{t("auth.register.subtitle")}</p>
+        <form onSubmit={submit} className="mt-6 space-y-4">
           <Input name="name" placeholder={t("common.name")} required minLength={2} />
           <Input name="email" type="email" placeholder={t("common.email")} required />
           <Input name="password" type="password" placeholder={t("auth.register.passwordPlaceholder")} required minLength={8} />
-          {error ? <p className="text-sm text-destructive">{error}</p> : null}
+          {error ? <p className="break-anywhere text-sm leading-6 text-destructive">{error}</p> : null}
           <Button className="w-full" size="lg" disabled={loading}>
             {loading ? t("auth.register.loading") : t("auth.register.submit")} <ArrowRight className="h-4 w-4" />
           </Button>

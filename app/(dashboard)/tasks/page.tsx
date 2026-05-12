@@ -65,13 +65,13 @@ export default function TasksPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-5 py-6 lg:px-8">
+    <div className="mx-auto max-w-5xl px-4 py-5 sm:px-5 sm:py-6 lg:px-8">
       <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
+        <div className="min-w-0">
           <p className="text-sm font-semibold text-primary">{t("tasks.kicker")}</p>
-          <h1 className="mt-1 text-3xl font-bold">{t("tasks.title")}</h1>
+          <h1 className="mt-1 text-2xl font-bold leading-tight sm:text-3xl">{t("tasks.title")}</h1>
         </div>
-        <Button onClick={generate}>
+        <Button onClick={generate} className="w-full sm:w-auto">
           <RotateCcw className="h-4 w-4" />
           {t("common.generate")}
         </Button>
@@ -80,7 +80,7 @@ export default function TasksPage() {
       <GlassPanel className="mt-6">
         <div className="flex flex-col gap-3 sm:flex-row">
           <Input value={title} onChange={(event) => setTitle(event.target.value)} placeholder={t("tasks.quickPlaceholder")} />
-          <Button onClick={createTask}>
+          <Button onClick={createTask} className="w-full sm:w-auto">
             <Plus className="h-4 w-4" />
             {t("common.add")}
           </Button>
@@ -92,20 +92,20 @@ export default function TasksPage() {
       <div className="mt-4 space-y-3">
         {tasks.map((task) => (
           <GlassPanel key={task.id} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
+            <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <h2 className="font-semibold">{t(task.title)}</h2>
+                <h2 className="break-words font-semibold">{t(task.title)}</h2>
                 <Badge>{t(`task.priority.${task.priority}`)}</Badge>
                 <Badge>{t(`task.type.${task.type}`)}</Badge>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">{task.description ? t(task.description) : null}</p>
+              <p className="break-words mt-2 text-sm text-muted-foreground">{task.description ? t(task.description) : null}</p>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" disabled={task.status === "skipped"} onClick={() => update(task.id, "skipped")}>
+            <div className="grid grid-cols-2 gap-2 sm:flex">
+              <Button className="w-full sm:w-auto" variant="outline" size="sm" disabled={task.status === "skipped"} onClick={() => update(task.id, "skipped")}>
                 <XCircle className="h-4 w-4" />
                 {t("common.skip")}
               </Button>
-              <Button size="sm" variant={task.status === "completed" ? "secondary" : "default"} disabled={task.status === "completed"} onClick={() => update(task.id, "completed")}>
+              <Button className="w-full sm:w-auto" size="sm" variant={task.status === "completed" ? "secondary" : "default"} disabled={task.status === "completed"} onClick={() => update(task.id, "completed")}>
                 <CheckCircle2 className="h-4 w-4" />
                 {task.status === "completed" ? t("common.done") : `+${task.xpReward} XP`}
               </Button>

@@ -31,27 +31,27 @@ export function LandingPage() {
 
   return (
     <main className="min-h-screen overflow-hidden">
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-5">
+      <header className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:px-5 sm:py-5">
         <AikaLogo />
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           <LanguageSwitcher className="hidden sm:inline-flex" />
           <Button variant="ghost" size="icon" aria-label={t("common.toggleTheme")} onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
-          <Button asChild>
+          <Button asChild className="hidden min-[420px]:inline-flex">
             <Link href="/register">{t("common.startFree")}</Link>
           </Button>
         </div>
       </header>
 
-      <section className="mx-auto grid min-h-[calc(100vh-88px)] w-full max-w-6xl items-center gap-10 px-5 pb-12 pt-6 lg:grid-cols-[1fr_0.95fr]">
+      <section className="mx-auto grid min-h-[calc(100svh-76px)] w-full max-w-6xl items-center gap-8 px-4 pb-10 pt-4 sm:px-5 sm:pb-12 sm:pt-6 lg:grid-cols-[1fr_0.95fr]">
         <div>
           <Badge className="mb-5 border-primary/30 bg-primary/10 text-primary">{t("landing.badge")}</Badge>
           <motion.h1
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55 }}
-            className="max-w-3xl text-balance text-5xl font-bold leading-tight sm:text-6xl"
+            className="max-w-3xl text-balance text-4xl font-bold leading-tight sm:text-6xl"
           >
             AIKA
           </motion.h1>
@@ -59,11 +59,11 @@ export function LandingPage() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.55 }}
-            className="mt-4 max-w-2xl text-xl text-muted-foreground sm:text-2xl"
+            className="mt-4 max-w-2xl text-lg leading-7 text-muted-foreground sm:text-2xl"
           >
             {t("landing.tagline")}
           </motion.p>
-          <p className="mt-5 max-w-2xl text-muted-foreground">{t("landing.subtitle")}</p>
+          <p className="mt-5 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">{t("landing.subtitle")}</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg">
               <Link href="/register">
@@ -78,20 +78,20 @@ export function LandingPage() {
 
         <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.18, duration: 0.55 }}>
           <GlassPanel className="p-4 sm:p-6">
-            <div className="mb-5 flex items-center justify-between">
-              <div>
+            <div className="mb-5 flex items-start justify-between gap-3">
+              <div className="min-w-0">
                 <p className="text-sm text-muted-foreground">{t("landing.preview.score")}</p>
-                <p className="text-2xl font-bold">{t("landing.preview.title")}</p>
+                <p className="break-anywhere text-xl font-bold sm:text-2xl">{t("landing.preview.title")}</p>
               </div>
-              <Badge className="border-secondary/30 bg-secondary/10 text-secondary">START</Badge>
+              <Badge className="shrink-0 border-secondary/30 bg-secondary/10 text-secondary">START</Badge>
             </div>
             <div className="grid gap-4 sm:grid-cols-[auto_1fr]">
-              <ProgressRing value={42} label={t("common.score")} />
+              <ProgressRing value={42} label={t("common.score")} className="mx-auto sm:mx-0" />
               <div className="space-y-3">
                 {previewTasks.map((task, index) => (
                   <div key={task} className="flex items-center gap-3 rounded-md border border-border/70 bg-background/45 p-3">
                     <span className="grid h-7 w-7 place-items-center rounded-md bg-primary/15 text-sm font-bold text-primary">{index + 1}</span>
-                    <span className="text-sm">{t(task)}</span>
+                    <span className="min-w-0 break-words text-sm">{t(task)}</span>
                   </div>
                 ))}
               </div>
@@ -104,7 +104,7 @@ export function LandingPage() {
         </motion.div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-6xl gap-4 px-5 py-10 md:grid-cols-3">
+      <section className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-8 sm:px-5 sm:py-10 md:grid-cols-3">
         {features.map((feature) => {
           const Icon = feature.icon;
           return (
@@ -117,7 +117,7 @@ export function LandingPage() {
         })}
       </section>
 
-      <section className="mx-auto grid w-full max-w-6xl gap-4 px-5 pb-16 md:grid-cols-3">
+      <section className="mx-auto grid w-full max-w-6xl gap-4 px-4 pb-14 sm:px-5 sm:pb-16 md:grid-cols-3">
         {testimonials.map((item) => (
           <GlassPanel key={item.name}>
             <p className="text-sm text-muted-foreground">{t(item.text)}</p>

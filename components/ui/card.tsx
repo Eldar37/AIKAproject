@@ -6,5 +6,5 @@ export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElemen
 }
 
 export function GlassPanel({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("glass rounded-lg p-5 shadow-sm", className)} {...props} />;
+  return <div className={cn("glass rounded-lg p-4 shadow-sm sm:p-5", className)} {...props} />;
 }

@@ -34,16 +34,16 @@ export default function JourneyPage() {
   }, []);
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-6 lg:px-8">
+    <div className="mx-auto max-w-6xl px-4 py-5 sm:px-5 sm:py-6 lg:px-8">
       <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
+        <div className="min-w-0">
           <p className="text-sm font-semibold text-primary">{t("journey.kicker")}</p>
-          <h1 className="mt-1 text-3xl font-bold">{t("journey.title")}</h1>
+          <h1 className="mt-1 text-2xl font-bold leading-tight sm:text-3xl">{t("journey.title")}</h1>
         </div>
-        <Badge className="border-primary/30 bg-primary/10 text-primary">{stage}</Badge>
+        <Badge className="w-fit border-primary/30 bg-primary/10 text-primary">{stage}</Badge>
       </header>
 
-      <div className="mt-8 grid gap-4">
+      <div className="mt-6 grid gap-4 sm:mt-8">
         {roadmap.map((item, index) => {
           const Icon = item.icon;
           const completed = milestones.includes(item.key) || stageOrder(stage) > stageOrder(item.stage);
@@ -51,19 +51,19 @@ export default function JourneyPage() {
           return (
             <GlassPanel key={item.key} className={cn("relative overflow-hidden", current && "border-primary/60 bg-primary/10")}>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                <div className={cn("grid h-14 w-14 place-items-center rounded-md border border-border bg-background/60", completed && "border-secondary bg-secondary/15 text-secondary", current && "border-primary text-primary")}>
+                <div className={cn("grid h-12 w-12 shrink-0 place-items-center rounded-md border border-border bg-background/60 sm:h-14 sm:w-14", completed && "border-secondary bg-secondary/15 text-secondary", current && "border-primary text-primary")}>
                   {completed ? <CheckCircle2 className="h-6 w-6" /> : <Icon className="h-6 w-6" />}
                 </div>
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-sm text-muted-foreground">0{index + 1}</span>
-                    <h2 className="text-xl font-bold">{t(item.title)}</h2>
+                    <h2 className="break-words text-lg font-bold sm:text-xl">{t(item.title)}</h2>
                     {current ? <Badge className="border-primary/30 bg-primary/10 text-primary">{t("common.current")}</Badge> : null}
                     {completed ? <Badge className="border-secondary/30 bg-secondary/10 text-secondary">{t("common.completed")}</Badge> : null}
                   </div>
                   <p className="mt-2 text-sm text-muted-foreground">{t(item.text)}</p>
                 </div>
-                <Button asChild variant={current ? "default" : "outline"}>
+                <Button asChild variant={current ? "default" : "outline"} className="w-full sm:w-auto">
                   <Link href={current ? "/tasks" : "/analytics"}>{current ? t("common.nextSteps") : t("common.progress")}</Link>
                 </Button>
               </div>

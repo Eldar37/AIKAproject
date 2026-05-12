@@ -69,10 +69,10 @@ export default function ContentPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-6 lg:px-8">
+    <div className="mx-auto max-w-6xl px-4 py-5 sm:px-5 sm:py-6 lg:px-8">
       <header>
         <p className="text-sm font-semibold text-primary">{t("content.kicker")}</p>
-        <h1 className="mt-1 text-3xl font-bold">{t("content.title")}</h1>
+        <h1 className="mt-1 text-2xl font-bold leading-tight sm:text-3xl">{t("content.title")}</h1>
       </header>
 
       <section className="mt-6 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
@@ -86,7 +86,7 @@ export default function ContentPage() {
                     key={item.value}
                     type="button"
                     onClick={() => setType(item.value)}
-                    className={`rounded-md border px-3 py-2 text-left text-sm ${type === item.value ? "border-primary bg-primary/10 text-primary" : "border-border"}`}
+                    className={`min-w-0 rounded-md border px-3 py-2 text-left text-sm leading-5 ${type === item.value ? "border-primary bg-primary/10 text-primary" : "border-border"}`}
                   >
                     {t(item.label)}
                   </button>
@@ -101,7 +101,7 @@ export default function ContentPage() {
                     key={item}
                     type="button"
                     onClick={() => setPlatform(item)}
-                    className={`rounded-md border px-3 py-2 text-sm ${platform === item ? "border-secondary bg-secondary/10 text-secondary" : "border-border"}`}
+                    className={`min-w-0 rounded-md border px-3 py-2 text-sm ${platform === item ? "border-secondary bg-secondary/10 text-secondary" : "border-border"}`}
                   >
                     {item}
                   </button>
@@ -118,7 +118,7 @@ export default function ContentPage() {
         </GlassPanel>
 
         <GlassPanel>
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 flex items-center justify-between gap-3">
             <h2 className="text-xl font-bold">{t("common.result")}</h2>
             {result ? (
               <Button variant="ghost" size="sm" onClick={() => navigator.clipboard.writeText(result)}>
@@ -128,7 +128,7 @@ export default function ContentPage() {
             ) : null}
           </div>
           <div className="min-h-72 rounded-md border border-border bg-background/45 p-4">
-            {result ? <p className="whitespace-pre-wrap text-sm leading-6">{result}</p> : <p className="text-sm text-muted-foreground">{t("content.ready")}</p>}
+            {result ? <p className="break-anywhere whitespace-pre-wrap text-sm leading-6">{result}</p> : <p className="text-sm text-muted-foreground">{t("content.ready")}</p>}
           </div>
         </GlassPanel>
       </section>
@@ -142,8 +142,8 @@ export default function ContentPage() {
                 <Badge>{t(`content.${item.type}`)}</Badge>
                 <Badge>{item.platform}</Badge>
               </div>
-              <p className="text-sm font-semibold">{item.prompt}</p>
-              <p className="mt-3 line-clamp-4 whitespace-pre-wrap text-sm text-muted-foreground">{item.result}</p>
+              <p className="break-anywhere text-sm font-semibold">{item.prompt}</p>
+              <p className="break-anywhere mt-3 line-clamp-4 whitespace-pre-wrap text-sm text-muted-foreground">{item.result}</p>
               <Button variant="ghost" size="sm" className="mt-3" onClick={() => navigator.clipboard.writeText(item.result)}>
                 <Copy className="h-4 w-4" />
                 {t("common.copy")}

@@ -40,20 +40,20 @@ export default function AnalyticsPage() {
   const stats = data?.stats;
 
   return (
-    <div className="mx-auto max-w-7xl px-5 py-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-5 sm:px-5 sm:py-6 lg:px-8">
       <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
+        <div className="min-w-0">
           <p className="text-sm font-semibold text-primary">{t("analytics.kicker")}</p>
-          <h1 className="mt-1 text-3xl font-bold">{t("analytics.title")}</h1>
+          <h1 className="mt-1 text-2xl font-bold leading-tight sm:text-3xl">{t("analytics.title")}</h1>
         </div>
-        <Badge className="border-primary/30 bg-primary/10 text-primary">{stats?.stage ?? "START"}</Badge>
+        <Badge className="w-fit border-primary/30 bg-primary/10 text-primary">{stats?.stage ?? "START"}</Badge>
       </header>
 
       <section className="mt-6 grid gap-4 lg:grid-cols-[auto_1fr]">
         <GlassPanel className="grid place-items-center">
           <ProgressRing value={stats?.growthScore ?? 0} label={t("common.score")} />
         </GlassPanel>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           <Metric icon={Gauge} label={t("analytics.tasksCompleted")} value={stats?.tasksCompleted ?? 0} />
           <Metric icon={Flame} label={t("analytics.currentStreak")} value={stats?.streak?.current ?? 0} />
           <Metric icon={Sparkles} label={t("analytics.xpLevel")} value={`${stats?.xp ?? 0} / ${stats?.level ?? 1}`} />
@@ -63,7 +63,7 @@ export default function AnalyticsPage() {
 
       <GlassPanel className="mt-4">
         <h2 className="mb-4 text-xl font-bold">{t("analytics.tasksCompleted")}</h2>
-        <div className="h-72">
+        <div className="h-64 sm:h-72">
           {mounted ? (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data?.activity ?? []}>
@@ -85,8 +85,8 @@ export default function AnalyticsPage() {
           return (
             <GlassPanel key={achievement.id}>
               <Award className="h-5 w-5 text-primary" />
-              <h2 className="mt-3 font-semibold">{t(`achievement.${type}.title`)}</h2>
-              <p className="mt-2 text-sm text-muted-foreground">{t(`achievement.${type}.description`)}</p>
+              <h2 className="break-words mt-3 font-semibold">{t(`achievement.${type}.title`)}</h2>
+              <p className="break-words mt-2 text-sm text-muted-foreground">{t(`achievement.${type}.description`)}</p>
             </GlassPanel>
           );
         })}
@@ -105,8 +105,8 @@ function Metric({ icon: Icon, label, value }: { icon: typeof Gauge; label: strin
   return (
     <GlassPanel>
       <Icon className="mb-4 h-5 w-5 text-primary" />
-      <p className="text-2xl font-bold">{value}</p>
-      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="break-words text-xl font-bold sm:text-2xl">{value}</p>
+      <p className="break-words text-xs text-muted-foreground">{label}</p>
     </GlassPanel>
   );
 }
