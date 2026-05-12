@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { AUTH_COOKIE, verifyAuthToken } from "@/lib/auth/jwt";
 
 const protectedPages = ["/dashboard", "/chat", "/journey", "/content", "/tasks", "/analytics", "/onboarding"];
+const publicApiPrefixes = ["/api/auth", "/api/health"];
 
 function corsHeaders(request: NextRequest) {
   const origin = request.headers.get("origin");
@@ -23,7 +24,7 @@ function corsHeaders(request: NextRequest) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isApi = pathname.startsWith("/api");
-  const isAuthApi = pathname.startsWith("/api/auth");
+  const isPublicApi = publicApiPrefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
   const isProtectedPage = protectedPages.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
   const headers = isApi ? corsHeaders(request) : undefined;
 
@@ -31,7 +32,7 @@ export async function middleware(request: NextRequest) {
     return new NextResponse(null, { status: 204, headers });
   }
 
-  if ((isApi && !isAuthApi) || isProtectedPage) {
+  if ((isApi && !isPublicApi) || isProtectedPage) {
     const session = await verifyAuthToken(request.cookies.get(AUTH_COOKIE)?.value);
 
     if (!session) {
