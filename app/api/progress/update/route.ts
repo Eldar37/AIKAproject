@@ -1,7 +1,9 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/db/prisma";
-import { requireUserId } from "@/lib/auth/middleware";
+import { getCurrentSession, requireUserId } from "@/lib/auth/middleware";
 import { calculateGrowthScore, calculateStageProgress, detectBusinessStage } from "@/lib/business/gamification";
+import { isSimpleMode } from "@/lib/config/runtime";
+import { simpleProgress } from "@/lib/simple-mode/data";
 import { handleRouteError, jsonResponse } from "@/lib/utils/http";
 import { progressUpdateSchema } from "@/lib/utils/validators";
 import type { BusinessStage } from "@/types/aika";
@@ -11,8 +13,20 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
-    const userId = await requireUserId();
     const payload = progressUpdateSchema.parse(await request.json());
+
+    if (isSimpleMode()) {
+      const session = await getCurrentSession();
+      const simple = session ? simpleProgress(session) : { progress: null };
+      return jsonResponse({
+        progress: simple.progress
+          ? { ...simple.progress, totalScore: payload.firstSaleDone ? 35 : simple.progress.totalScore }
+          : null,
+        mode: "simple"
+      });
+    }
+
+    const userId = await requireUserId();
     const [business, tasksCompleted, contentCount, progress] = await Promise.all([
       prisma.businessProfile.findUnique({ where: { userId } }),
       prisma.task.count({ where: { userId, status: "completed" } }),

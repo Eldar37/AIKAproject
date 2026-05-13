@@ -5,6 +5,8 @@ import { callAI } from "@/lib/ai/provider";
 import { publicAIErrorMessage } from "@/lib/ai/errors";
 import { prisma } from "@/lib/db/prisma";
 import { requireUserId } from "@/lib/auth/middleware";
+import { isSimpleMode } from "@/lib/config/runtime";
+import { simpleGeneratedContent } from "@/lib/simple-mode/data";
 import { checkRateLimit, rateLimitKey } from "@/lib/utils/rate-limit";
 import { contentGenerateSchema } from "@/lib/utils/validators";
 import { errorResponse, handleRouteError, jsonResponse } from "@/lib/utils/http";
@@ -14,13 +16,22 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
+    const payload = contentGenerateSchema.parse(await request.json());
+
+    if (isSimpleMode()) {
+      return jsonResponse({
+        content: simpleGeneratedContent(payload.type, payload.platform, payload.prompt),
+        model: "simple-mode",
+        mode: "simple"
+      });
+    }
+
     const userId = await requireUserId();
     const limit = checkRateLimit(rateLimitKey("content", userId, request.headers.get("x-forwarded-for")), 10, 60_000);
     if (!limit.allowed) {
       return errorResponse("Rate limit exceeded. Try again in a minute.", 429);
     }
 
-    const payload = contentGenerateSchema.parse(await request.json());
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { profile: true, business: true, progress: true, streaks: true }

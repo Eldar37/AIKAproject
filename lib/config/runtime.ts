@@ -1,5 +1,13 @@
+export function isDatabaseConfigured() {
+  return Boolean(process.env.DATABASE_URL);
+}
+
+export function isSimpleMode() {
+  return !isDatabaseConfigured();
+}
+
 export function assertDatabaseConfig() {
-  if (!process.env.DATABASE_URL) {
+  if (!isDatabaseConfigured()) {
     throw new Error("DATABASE_URL must be set");
   }
 }

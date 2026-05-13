@@ -4,7 +4,9 @@ import { buildBusinessMemory, formatContextualUserMessage } from "@/lib/ai/memor
 import { callAI } from "@/lib/ai/provider";
 import { publicAIErrorMessage } from "@/lib/ai/errors";
 import { prisma } from "@/lib/db/prisma";
-import { requireUserId } from "@/lib/auth/middleware";
+import { getCurrentSession, requireUserId } from "@/lib/auth/middleware";
+import { isSimpleMode } from "@/lib/config/runtime";
+import { simpleAssistantReply } from "@/lib/simple-mode/data";
 import { errorResponse, handleRouteError, jsonResponse } from "@/lib/utils/http";
 import { checkRateLimit, rateLimitKey } from "@/lib/utils/rate-limit";
 import { chatSchema } from "@/lib/utils/validators";
@@ -15,13 +17,30 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
+    const payload = chatSchema.parse(await request.json());
+
+    if (isSimpleMode()) {
+      const session = await getCurrentSession();
+      const mode = payload.mode ?? ((session?.business?.aiMode as AIMode | undefined) || "START_MODE");
+      return jsonResponse({
+        conversationId: payload.conversationId ?? "simple_conversation",
+        message: {
+          id: `simple_message_${Date.now()}`,
+          role: "assistant",
+          content: simpleAssistantReply(payload.message, mode),
+          createdAt: new Date()
+        },
+        model: "simple-mode",
+        mode: "simple"
+      });
+    }
+
     const userId = await requireUserId();
     const limit = checkRateLimit(rateLimitKey("chat", userId, request.headers.get("x-forwarded-for")), 10, 60_000);
     if (!limit.allowed) {
       return errorResponse("Rate limit exceeded. Try again in a minute.", 429);
     }
 
-    const payload = chatSchema.parse(await request.json());
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { profile: true, business: true, progress: true, streaks: true }

@@ -15,16 +15,21 @@ function configured(value?: string) {
 function envCheck() {
   const databaseUrl = configured(process.env.DATABASE_URL);
   const jwtSecret = Boolean(process.env.JWT_SECRET && process.env.JWT_SECRET.length >= 16);
+  const simpleMode = !databaseUrl;
   const hfApiKey = configured(process.env.HF_API_KEY);
 
   return {
+    simpleMode: {
+      ok: simpleMode,
+      status: simpleMode ? "enabled" : "disabled"
+    },
     databaseUrl: {
-      ok: databaseUrl,
-      status: databaseUrl ? "configured" : "missing"
+      ok: databaseUrl || simpleMode,
+      status: databaseUrl ? "configured" : "not_required_in_simple_mode"
     },
     jwtSecret: {
-      ok: jwtSecret,
-      status: jwtSecret ? "configured" : "missing_or_too_short"
+      ok: jwtSecret || simpleMode,
+      status: jwtSecret ? "configured" : simpleMode ? "not_required_in_simple_mode" : "missing_or_too_short"
     },
     hfApiKey: {
       ok: hfApiKey,
@@ -35,7 +40,7 @@ function envCheck() {
 
 async function databaseCheck(): Promise<HealthCheck> {
   if (!configured(process.env.DATABASE_URL)) {
-    return { ok: false, status: "DATABASE_URL_MISSING" };
+    return { ok: true, status: "simple_mode_no_database" };
   }
 
   try {

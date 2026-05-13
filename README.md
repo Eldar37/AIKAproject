@@ -20,14 +20,16 @@ npm install
 npm run build && npm run start
 ```
 
-`npm run build` runs `prisma generate && next build`. Run database migrations separately with `npm run db:deploy` before production traffic.
+`npm run build` runs `prisma generate && next build`.
+
+If `DATABASE_URL` is not configured, AIKA runs in simple mode: registration, login, onboarding, dashboard, tasks, chat, and content tools work without PostgreSQL. Simple mode is useful for a free Vercel demo. Add `DATABASE_URL` later when you need persistent real user accounts.
 
 ## Environment Variables
 
 | Variable | Purpose |
 | --- | --- |
-| `DATABASE_URL` | PostgreSQL connection string used by Prisma. |
-| `JWT_SECRET` | Secret for signing auth cookies. Use a strong production value. |
+| `DATABASE_URL` | Optional. PostgreSQL connection string used by Prisma for persistent accounts. |
+| `JWT_SECRET` | Optional in simple mode. Secret for signing auth cookies when `DATABASE_URL` is enabled. |
 | `NEXTAUTH_SECRET` | Reserved app auth secret for compatible deployments. |
 | `NEXTAUTH_URL` | Public app URL for local or deployed runtime. |
 | `HF_API_KEY` | Hugging Face API token. Never hardcode this in source. |
@@ -54,7 +56,9 @@ Use these project settings:
 - Install command: `npm install`
 - Output directory: `.next`
 
-Add environment variables in Vercel:
+For the simplest free Vercel demo, no database variable is required. The app will use simple mode automatically.
+
+For persistent production accounts, add environment variables in Vercel:
 
 - `DATABASE_URL`
 - `JWT_SECRET`

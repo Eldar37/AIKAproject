@@ -1,8 +1,12 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { determineModeFromOnboarding, getModeDefinition } from "@/lib/ai/modes";
 import { createDailyTasksForUser } from "@/lib/business/tasks";
 import { prisma } from "@/lib/db/prisma";
-import { requireUserId } from "@/lib/auth/middleware";
+import { getCurrentSession, requireUserId } from "@/lib/auth/middleware";
+import { AUTH_COOKIE, signAuthToken } from "@/lib/auth/jwt";
+import { authCookieOptions } from "@/lib/auth/cookies";
+import { isSimpleMode } from "@/lib/config/runtime";
+import { applySimpleOnboarding, simpleTasks, simpleUserFromSession } from "@/lib/simple-mode/data";
 import { handleRouteError, jsonResponse } from "@/lib/utils/http";
 import { onboardingSchema } from "@/lib/utils/validators";
 
@@ -11,8 +15,25 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
-    const userId = await requireUserId();
     const payload = onboardingSchema.parse(await request.json());
+
+    if (isSimpleMode()) {
+      const session = await getCurrentSession();
+      if (!session) return jsonResponse({ error: "Authentication required" }, { status: 401 });
+
+      const nextSession = applySimpleOnboarding(session, payload);
+      const response = NextResponse.json({
+        user: simpleUserFromSession(nextSession),
+        tasks: simpleTasks(nextSession.business?.aiMode),
+        aiMode: nextSession.business?.aiMode,
+        mode: "simple"
+      });
+
+      response.cookies.set(AUTH_COOKIE, await signAuthToken(nextSession), authCookieOptions());
+      return response;
+    }
+
+    const userId = await requireUserId();
     const aiMode = determineModeFromOnboarding({
       hasBusiness: payload.hasBusiness,
       mainGoal: payload.mainGoal,

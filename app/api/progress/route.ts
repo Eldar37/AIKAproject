@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/db/prisma";
-import { requireUserId } from "@/lib/auth/middleware";
+import { getCurrentSession, requireUserId } from "@/lib/auth/middleware";
+import { isSimpleMode } from "@/lib/config/runtime";
+import { simpleProgress } from "@/lib/simple-mode/data";
 import { handleRouteError, jsonResponse } from "@/lib/utils/http";
 
 export const runtime = "nodejs";
@@ -7,6 +9,11 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
+    if (isSimpleMode()) {
+      const session = await getCurrentSession();
+      return jsonResponse(session ? { ...simpleProgress(session), mode: "simple" } : { progress: null, achievements: [] });
+    }
+
     const userId = await requireUserId();
     const progress = await prisma.progress.upsert({
       where: { userId },

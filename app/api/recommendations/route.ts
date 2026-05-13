@@ -1,5 +1,7 @@
 import { getDashboardSnapshot } from "@/lib/business/tasks";
-import { requireUserId } from "@/lib/auth/middleware";
+import { getCurrentSession, requireUserId } from "@/lib/auth/middleware";
+import { isSimpleMode } from "@/lib/config/runtime";
+import { simpleRecommendations } from "@/lib/simple-mode/data";
 import { errorResponse, handleRouteError, jsonResponse } from "@/lib/utils/http";
 
 export const runtime = "nodejs";
@@ -7,6 +9,15 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
+    if (isSimpleMode()) {
+      const session = await getCurrentSession();
+      return jsonResponse(simpleRecommendations(session ?? {
+        userId: "simple_guest",
+        email: "guest@aika.local",
+        local: true
+      }));
+    }
+
     const userId = await requireUserId();
     const snapshot = await getDashboardSnapshot(userId);
     if (!snapshot) return errorResponse("User not found", 404);

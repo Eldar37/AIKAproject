@@ -73,7 +73,7 @@ describe("POST /api/auth/register", () => {
     expect(response.status).toBe(409);
   });
 
-  it("returns a clear deployment error when DATABASE_URL is missing", async () => {
+  it("creates a simple-mode account when DATABASE_URL is missing", async () => {
     delete process.env.DATABASE_URL;
 
     const request = new NextRequest("http://localhost:3000/api/auth/register", {
@@ -89,8 +89,10 @@ describe("POST /api/auth/register", () => {
     const response = await POST(request);
     const body = await response.json();
 
-    expect(response.status).toBe(503);
-    expect(body.code).toBe("DATABASE_URL_MISSING");
+    expect(response.status).toBe(200);
+    expect(body.mode).toBe("simple");
+    expect(body.user.email).toBe("test@aika.local");
+    expect(response.headers.get("set-cookie")).toContain("aika_session");
     expect(prisma.user.findUnique).not.toHaveBeenCalled();
   });
 });

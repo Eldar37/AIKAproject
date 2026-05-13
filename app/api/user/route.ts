@@ -1,6 +1,10 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
-import { requireUserId } from "@/lib/auth/middleware";
+import { getCurrentSession, requireUserId } from "@/lib/auth/middleware";
+import { AUTH_COOKIE, signAuthToken } from "@/lib/auth/jwt";
+import { authCookieOptions } from "@/lib/auth/cookies";
+import { isSimpleMode } from "@/lib/config/runtime";
+import { simpleUserFromSession } from "@/lib/simple-mode/data";
 import { handleRouteError, jsonResponse } from "@/lib/utils/http";
 import { userPatchSchema } from "@/lib/utils/validators";
 
@@ -9,6 +13,11 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
+    if (isSimpleMode()) {
+      const session = await getCurrentSession();
+      return jsonResponse({ user: session ? simpleUserFromSession(session) : null, mode: "simple" });
+    }
+
     const userId = await requireUserId();
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -29,6 +38,38 @@ export async function GET() {
 
 export async function PATCH(request: NextRequest) {
   try {
+    if (isSimpleMode()) {
+      const session = await getCurrentSession();
+      if (!session) return jsonResponse({ user: null }, { status: 401 });
+
+      const payload = userPatchSchema.parse(await request.json());
+      const nextSession = {
+        ...session,
+        name: payload.name ?? session.name,
+        language: payload.language ?? session.language,
+        experienceLevel: payload.experienceLevel ?? session.experienceLevel,
+        business: session.business
+          ? {
+              ...session.business,
+              name: payload.businessName ?? session.business.name,
+              niche: payload.niche ?? session.business.niche,
+              description: payload.description ?? session.business.description,
+              stage: payload.stage ?? session.business.stage,
+              budget: payload.budget ?? session.business.budget,
+              targetAudience: payload.targetAudience ?? session.business.targetAudience,
+              channels: payload.channels ?? session.business.channels,
+              firstSaleDone: payload.firstSaleDone ?? session.business.firstSaleDone,
+              monthlyRevenue: payload.monthlyRevenue ?? session.business.monthlyRevenue,
+              goals: payload.goals ?? session.business.goals,
+              aiMode: payload.aiMode ?? session.business.aiMode
+            }
+          : session.business
+      };
+      const response = NextResponse.json({ user: simpleUserFromSession(nextSession), mode: "simple" });
+      response.cookies.set(AUTH_COOKIE, await signAuthToken(nextSession), authCookieOptions());
+      return response;
+    }
+
     const userId = await requireUserId();
     const payload = userPatchSchema.parse(await request.json());
 

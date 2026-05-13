@@ -3,7 +3,8 @@ import { prisma } from "@/lib/db/prisma";
 import { hashPassword } from "@/lib/auth/password";
 import { AUTH_COOKIE, signAuthToken } from "@/lib/auth/jwt";
 import { authCookieOptions } from "@/lib/auth/cookies";
-import { assertAuthConfig, assertDatabaseConfig } from "@/lib/config/runtime";
+import { assertAuthConfig, isDatabaseConfigured } from "@/lib/config/runtime";
+import { createSimpleSession, simpleUserFromSession } from "@/lib/simple-mode/data";
 import { handleRouteError } from "@/lib/utils/http";
 import { registerSchema } from "@/lib/utils/validators";
 
@@ -12,10 +13,22 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
-    assertDatabaseConfig();
+    const payload = registerSchema.parse(await request.json());
+
+    if (!isDatabaseConfigured()) {
+      const session = createSimpleSession(payload);
+      const token = await signAuthToken(session);
+      const response = NextResponse.json({
+        user: simpleUserFromSession(session),
+        mode: "simple"
+      });
+
+      response.cookies.set(AUTH_COOKIE, token, authCookieOptions());
+      return response;
+    }
+
     assertAuthConfig();
 
-    const payload = registerSchema.parse(await request.json());
     const existing = await prisma.user.findUnique({ where: { email: payload.email } });
 
     if (existing) {

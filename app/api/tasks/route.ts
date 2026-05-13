@@ -3,6 +3,9 @@ import { prisma } from "@/lib/db/prisma";
 import { requireUserId } from "@/lib/auth/middleware";
 import { createDailyTasksForUser } from "@/lib/business/tasks";
 import { todayRange } from "@/lib/business/gamification";
+import { getCurrentSession } from "@/lib/auth/middleware";
+import { isSimpleMode } from "@/lib/config/runtime";
+import { simpleTasks } from "@/lib/simple-mode/data";
 import { handleRouteError, jsonResponse } from "@/lib/utils/http";
 import { taskCreateSchema } from "@/lib/utils/validators";
 
@@ -11,6 +14,11 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
+    if (isSimpleMode()) {
+      const session = await getCurrentSession();
+      return jsonResponse({ tasks: simpleTasks(session?.business?.aiMode), mode: "simple" });
+    }
+
     const userId = await requireUserId();
     const { start, end } = todayRange();
     let tasks = await prisma.task.findMany({
@@ -30,6 +38,25 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    if (isSimpleMode()) {
+      const payload = taskCreateSchema.parse(await request.json());
+      return jsonResponse({
+        task: {
+          id: `simple_custom_${Date.now()}`,
+          title: payload.title,
+          description: payload.description,
+          type: payload.type,
+          status: "pending",
+          priority: payload.priority,
+          xpReward: payload.xpReward,
+          dueDate: new Date(),
+          createdAt: new Date(),
+          completedAt: null
+        },
+        mode: "simple"
+      }, { status: 201 });
+    }
+
     const userId = await requireUserId();
     const payload = taskCreateSchema.parse(await request.json());
     const task = await prisma.task.create({
