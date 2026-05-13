@@ -70,7 +70,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
 
   return (
     <div
-      className={cn("inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-background/50 p-1", className)}
+      className={cn("inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-white/80 p-1 shadow-sm dark:bg-card/80", className)}
       aria-label={t("common.language")}
     >
       {LANGUAGES.map((item) => (
@@ -80,7 +80,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
           onClick={() => setLanguage(item)}
           className={cn(
             "h-8 min-w-8 rounded px-2 text-xs font-semibold text-muted-foreground transition hover:bg-muted hover:text-foreground",
-            language === item && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
+            language === item && "bg-gradient-to-r from-primary to-accent text-primary-foreground hover:text-primary-foreground"
           )}
         >
           {LANGUAGE_LABELS[item]}

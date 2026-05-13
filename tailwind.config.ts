@@ -51,7 +51,7 @@ const config: Config = {
         sans: ["var(--font-geist-sans)", "Inter", "system-ui", "sans-serif"]
       },
       boxShadow: {
-        glow: "0 0 32px rgba(59, 130, 246, 0.28)"
+        glow: "0 18px 36px rgba(99, 81, 255, 0.24)"
       }
     }
   },

@@ -100,7 +100,7 @@ export default function ChatPage() {
 
   return (
     <div className="flex min-h-[calc(100svh-9.5rem)] flex-col xl:h-screen xl:min-h-0">
-      <header className="border-b border-border bg-background/85 px-4 py-3 backdrop-blur sm:px-5 sm:py-4 lg:px-8">
+      <header className="border-b border-border bg-white/88 px-4 py-3 shadow-sm backdrop-blur dark:bg-card/88 sm:px-5 sm:py-4 lg:px-8">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <p className="text-sm font-semibold text-primary">{t("chat.kicker")}</p>
@@ -132,7 +132,7 @@ export default function ChatPage() {
           ))}
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto rounded-lg border border-border bg-background/35 p-2 sm:p-3">
+        <div className="min-h-0 flex-1 overflow-y-auto rounded-lg border border-border bg-white/72 p-2 shadow-[0_18px_45px_rgba(82,74,180,0.08)] dark:bg-card/60 sm:p-3">
           {messages.length === 0 ? (
             <GlassPanel className="mx-auto mt-8 max-w-xl text-center sm:mt-12">
               <Bot className="mx-auto mb-4 h-8 w-8 text-primary" />
@@ -159,7 +159,7 @@ export default function ChatPage() {
                   ) : null}
                 </div>
                 {message.role === "user" ? (
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-secondary text-secondary-foreground">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-gradient-to-br from-primary to-accent text-primary-foreground">
                     <User className="h-4 w-4" />
                   </span>
                 ) : null}
@@ -170,7 +170,7 @@ export default function ChatPage() {
           </div>
         </div>
 
-        {notice ? <p className="py-2 text-sm text-secondary">{notice}</p> : null}
+        {notice ? <p className="py-2 text-sm text-primary">{notice}</p> : null}
         <form onSubmit={submit} className="flex gap-2 py-3 sm:gap-3 sm:py-4">
           <Textarea value={input} onChange={(event) => setInput(event.target.value)} placeholder={t("chat.placeholder")} className="min-h-12 flex-1 resize-none sm:min-h-14" />
           <Button type="submit" size="icon" disabled={loading}>

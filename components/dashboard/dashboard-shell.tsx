@@ -28,8 +28,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-border/70 bg-background/85 p-5 backdrop-blur xl:block">
+    <div className="min-h-screen bg-transparent text-foreground">
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-border bg-white/88 p-5 shadow-[18px_0_48px_rgba(82,74,180,0.08)] backdrop-blur xl:block dark:bg-card/88">
         <div className="mb-8 flex items-center justify-between gap-3">
           <AikaLogo href="/dashboard" compact />
         </div>
@@ -44,8 +44,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex h-11 items-center gap-3 rounded-md px-3 text-sm font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground",
-                  active && "bg-muted text-foreground"
+                  "flex h-11 items-center gap-3 rounded-md px-3 text-sm font-medium text-muted-foreground transition hover:bg-primary/10 hover:text-primary",
+                  active && "bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-glow hover:text-primary-foreground"
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -62,14 +62,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       <main className="pb-[calc(5.75rem+env(safe-area-inset-bottom))] xl:ml-64 xl:pb-0">
-        <div className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border bg-background/92 px-4 py-3 backdrop-blur xl:hidden">
+        <div className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border bg-white/92 px-4 py-3 shadow-sm backdrop-blur xl:hidden dark:bg-card/92">
           <AikaLogo href="/dashboard" compact />
           <LanguageSwitcher />
         </div>
         {children}
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-6 border-t border-border bg-background/92 px-1.5 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur xl:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-6 border-t border-border bg-white/94 px-1.5 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 shadow-[0_-18px_40px_rgba(82,74,180,0.1)] backdrop-blur xl:hidden dark:bg-card/94">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = pathname === item.href;
@@ -79,7 +79,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               href={item.href}
               className={cn(
                 "grid min-w-0 place-items-center gap-1 rounded-md px-1 py-2 text-[10px] leading-none text-muted-foreground",
-                active && "bg-muted text-foreground"
+                active && "bg-primary/10 text-primary"
               )}
             >
               <Icon className="h-4 w-4" />

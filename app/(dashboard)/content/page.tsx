@@ -101,7 +101,7 @@ export default function ContentPage() {
                     key={item}
                     type="button"
                     onClick={() => setPlatform(item)}
-                    className={`min-w-0 rounded-md border px-3 py-2 text-sm ${platform === item ? "border-secondary bg-secondary/10 text-secondary" : "border-border"}`}
+                    className={`min-w-0 rounded-md border px-3 py-2 text-sm ${platform === item ? "border-primary bg-primary/10 text-primary" : "border-border"}`}
                   >
                     {item}
                   </button>
@@ -127,7 +127,7 @@ export default function ContentPage() {
               </Button>
             ) : null}
           </div>
-          <div className="min-h-72 rounded-md border border-border bg-background/45 p-4">
+          <div className="min-h-72 rounded-md border border-border bg-white/76 p-4 shadow-sm dark:bg-card/70">
             {result ? <p className="break-anywhere whitespace-pre-wrap text-sm leading-6">{result}</p> : <p className="text-sm text-muted-foreground">{t("content.ready")}</p>}
           </div>
         </GlassPanel>

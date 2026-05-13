@@ -117,7 +117,7 @@ export default function OnboardingPage() {
                 type="button"
                 onClick={() => setStep(index)}
                 className={cn(
-                  "grid min-h-12 place-items-center rounded-md border border-border bg-card/70 p-2 text-xs text-muted-foreground sm:min-h-16",
+                  "grid min-h-12 place-items-center rounded-md border border-border bg-white/76 p-2 text-xs text-muted-foreground shadow-sm dark:bg-card/70 sm:min-h-16",
                   index === step && "border-primary bg-primary/10 text-primary"
                 )}
               >
@@ -196,10 +196,10 @@ export default function OnboardingPage() {
                       key={channel}
                       type="button"
                       onClick={() => toggleChannel(channel)}
-                      className={cn("flex items-center justify-between rounded-md border border-border p-3 text-sm", state.channels.includes(channel) && "border-secondary bg-secondary/10")}
+                      className={cn("flex items-center justify-between rounded-md border border-border p-3 text-sm", state.channels.includes(channel) && "border-primary bg-primary/10 text-primary")}
                     >
                       {channel}
-                      {state.channels.includes(channel) ? <Check className="h-4 w-4 text-secondary" /> : null}
+                      {state.channels.includes(channel) ? <Check className="h-4 w-4 text-primary" /> : null}
                     </button>
                   ))}
                 </div>

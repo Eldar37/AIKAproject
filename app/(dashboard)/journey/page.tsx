@@ -51,7 +51,7 @@ export default function JourneyPage() {
           return (
             <GlassPanel key={item.key} className={cn("relative overflow-hidden", current && "border-primary/60 bg-primary/10")}>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                <div className={cn("grid h-12 w-12 shrink-0 place-items-center rounded-md border border-border bg-background/60 sm:h-14 sm:w-14", completed && "border-secondary bg-secondary/15 text-secondary", current && "border-primary text-primary")}>
+                <div className={cn("grid h-12 w-12 shrink-0 place-items-center rounded-md border border-border bg-white/80 shadow-sm dark:bg-card/70 sm:h-14 sm:w-14", completed && "border-primary bg-primary/10 text-primary", current && "border-primary text-primary")}>
                   {completed ? <CheckCircle2 className="h-6 w-6" /> : <Icon className="h-6 w-6" />}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -59,7 +59,7 @@ export default function JourneyPage() {
                     <span className="text-sm text-muted-foreground">0{index + 1}</span>
                     <h2 className="break-words text-lg font-bold sm:text-xl">{t(item.title)}</h2>
                     {current ? <Badge className="border-primary/30 bg-primary/10 text-primary">{t("common.current")}</Badge> : null}
-                    {completed ? <Badge className="border-secondary/30 bg-secondary/10 text-secondary">{t("common.completed")}</Badge> : null}
+                    {completed ? <Badge className="border-primary/30 bg-primary/10 text-primary">{t("common.completed")}</Badge> : null}
                   </div>
                   <p className="mt-2 text-sm text-muted-foreground">{t(item.text)}</p>
                 </div>

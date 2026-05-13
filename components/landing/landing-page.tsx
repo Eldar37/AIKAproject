@@ -83,20 +83,20 @@ export function LandingPage() {
                 <p className="text-sm text-muted-foreground">{t("landing.preview.score")}</p>
                 <p className="break-anywhere text-xl font-bold sm:text-2xl">{t("landing.preview.title")}</p>
               </div>
-              <Badge className="shrink-0 border-secondary/30 bg-secondary/10 text-secondary">START</Badge>
+              <Badge className="shrink-0 border-primary/20 bg-primary/10 text-primary">START</Badge>
             </div>
             <div className="grid gap-4 sm:grid-cols-[auto_1fr]">
               <ProgressRing value={42} label={t("common.score")} className="mx-auto sm:mx-0" />
               <div className="space-y-3">
                 {previewTasks.map((task, index) => (
-                  <div key={task} className="flex items-center gap-3 rounded-md border border-border/70 bg-background/45 p-3">
+                  <div key={task} className="flex items-center gap-3 rounded-md border border-border bg-white/76 p-3 shadow-sm dark:bg-card/70">
                     <span className="grid h-7 w-7 place-items-center rounded-md bg-primary/15 text-sm font-bold text-primary">{index + 1}</span>
                     <span className="min-w-0 break-words text-sm">{t(task)}</span>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="mt-5 rounded-md border border-border/70 bg-background/45 p-4">
+            <div className="mt-5 rounded-md border border-border bg-white/76 p-4 shadow-sm dark:bg-card/70">
               <p className="text-sm font-semibold">{t("landing.preview.insightTitle")}</p>
               <p className="mt-2 text-sm text-muted-foreground">{t("landing.preview.insight")}</p>
             </div>

@@ -135,7 +135,7 @@ export default function DashboardPage() {
         <GlassPanel>
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold">{t("landing.preview.insightTitle")}</h2>
-            <Target className="h-5 w-5 text-secondary" />
+            <Target className="h-5 w-5 text-primary" />
           </div>
           <p className="mt-4 text-sm leading-6 text-muted-foreground">{t(insightKey)}</p>
           <Button asChild variant="outline" className="mt-5">
@@ -156,7 +156,7 @@ export default function DashboardPage() {
           </div>
           <div className="space-y-3">
             {tasks.slice(0, 3).map((task) => (
-              <div key={task.id} className="flex flex-col gap-3 rounded-md border border-border bg-background/45 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div key={task.id} className="flex flex-col gap-3 rounded-md border border-border bg-white/76 p-4 shadow-sm dark:bg-card/70 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-w-0">
                   <p className="break-words font-semibold">{t(task.title)}</p>
                   <p className="mt-1 text-sm text-muted-foreground">{task.description ? t(task.description) : null}</p>
@@ -174,7 +174,7 @@ export default function DashboardPage() {
           <h2 className="text-xl font-bold">{t("dashboard.activity")}</h2>
           <div className="mt-4 space-y-3">
             {(analytics?.stats?.achievements ?? []).slice(0, 4).map((achievement) => (
-              <div key={achievement.id} className="flex min-w-0 items-center gap-3 rounded-md border border-border bg-background/45 p-3">
+              <div key={achievement.id} className="flex min-w-0 items-center gap-3 rounded-md border border-border bg-white/76 p-3 shadow-sm dark:bg-card/70">
                 <Award className="h-4 w-4 text-primary" />
                 <span className="min-w-0 break-words text-sm">{t(`achievement.${achievement.type ?? "first_task"}.title`)}</span>
               </div>
@@ -189,7 +189,7 @@ export default function DashboardPage() {
 
 function Metric({ icon: Icon, label, value }: { icon: typeof CheckCircle2; label: string; value: string | number }) {
   return (
-    <div className="rounded-md border border-border bg-background/45 p-4">
+    <div className="rounded-md border border-border bg-white/76 p-4 shadow-sm dark:bg-card/70">
       <Icon className="mb-3 h-5 w-5 text-primary" />
       <p className="text-2xl font-bold">{value}</p>
       <p className="text-xs text-muted-foreground">{label}</p>

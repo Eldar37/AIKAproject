@@ -23,9 +23,9 @@ export function ProgressRing({ value, label, className }: { value: number; label
         />
         <defs>
           <linearGradient id="aika-ring" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor="#2f8cff" />
-            <stop offset="55%" stopColor="#8b5cf6" />
-            <stop offset="100%" stopColor="#10b981" />
+            <stop offset="0%" stopColor="#2f7cff" />
+            <stop offset="45%" stopColor="#6655ff" />
+            <stop offset="100%" stopColor="#8f6bff" />
           </linearGradient>
         </defs>
       </svg>
